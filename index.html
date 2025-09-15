@@ -43,12 +43,32 @@
     <div id="app" class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Results Screen -->
         <div id="results-screen" class="hidden bg-white rounded-xl shadow-lg p-10 max-w-xl mx-auto flex flex-col items-center justify-center">
+            <div class="absolute inset-0 z-0 bg-gradient-to-br from-pink-100 via-indigo-100 to-blue-100 animate-fade-in"></div>
             <div id="results-celebration" class="w-full flex flex-col items-center mb-6"></div>
-            <h2 class="text-4xl font-extrabold text-indigo-700 mb-2">Quiz Results</h2>
-            <div id="results-score" class="text-3xl font-bold mb-2"></div>
-            <div id="results-badge" class="mb-2"></div>
-            <div id="results-achievements" class="mb-4"></div>
-            <button id="results-home" class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-indigo-700 transition">Back to Home</button>
+            <div class="relative z-10 w-full flex flex-col items-center">
+                <div class="bg-gradient-to-br from-white via-indigo-50 to-pink-50 rounded-3xl shadow-2xl p-8 md:p-12 max-w-lg w-full flex flex-col items-center animate-fade-in-up">
+                    <div id="results-badge" class="mb-4 animate-bounce-slow"></div>
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-indigo-700 mb-2 tracking-tight drop-shadow-lg">Quiz Results</h2>
+                    <div id="results-score" class="text-3xl md:text-4xl font-bold mb-4 text-pink-600 drop-shadow-sm"></div>
+                    <div id="results-achievements" class="mb-4 text-lg"></div>
+                    <button id="results-home" class="mt-4 bg-gradient-to-r from-pink-500 to-indigo-500 text-white px-8 py-3 rounded-xl font-bold text-lg shadow-lg hover:from-indigo-600 hover:to-pink-600 transition-all duration-200">Back to Home</button>
+                </div>
+            </div>
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
+}
+.animate-fade-in { animation: fade-in 1s ease; }
+.animate-fade-in-up { animation: fade-in-up 1s cubic-bezier(.4,2,.6,1); }
+.animate-bounce-slow { animation: bounce-slow 2.5s infinite; }
         </div>
         <!-- Home Screen: Language Selection -->
         <div id="home-screen" class="bg-white rounded-xl shadow-lg p-8" data-aos="fade-up">
@@ -95,11 +115,7 @@
         </div>
         <!-- Quiz Screen -->
         <div id="quiz-screen" class="hidden bg-white rounded-xl shadow-lg p-6 md:p-8">
-            <!-- Leaderboard on Quiz Page -->
-            <div id="quiz-leaderboard" class="mb-8">
-                <h3 class="text-xl font-bold text-indigo-700 mb-2">Leaderboard</h3>
-                <div id="quiz-leaderboard-rows"></div>
-            </div>
+            <!-- Leaderboard removed -->
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-2">
                     <i data-feather="clock" class="w-5 h-5 text-gray-500"></i>
@@ -207,22 +223,27 @@ function showResults(score, total) {
     // Score display
     resultsScore.textContent = `Score: ${score} / ${total}`;
     // Badge logic
-    let badge = '', badgeTitle = '', badgeColor = '', achievements = [];
+    let badgeSVG = '', badgeTitle = '', badgeColor = '', achievements = [];
     if (score >= 9) {
-        badge = '🌸'; badgeTitle = 'Legend'; badgeColor = 'text-pink-600';
+        badgeSVG = `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#f472b6" stroke="#be185d" stroke-width="4"/><path d="M40 20 L50 60 L40 50 L30 60 Z" fill="#fff" stroke="#be185d" stroke-width="2"/><circle cx="40" cy="40" r="12" fill="#fff" stroke="#be185d" stroke-width="2"/></svg>`;
+        badgeTitle = 'Legend'; badgeColor = 'text-pink-600';
         achievements.push('Flower Shower!');
     } else if (score >= 8) {
-        badge = '🔥'; badgeTitle = 'Core'; badgeColor = 'text-red-600';
+        badgeSVG = `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#f87171" stroke="#b91c1c" stroke-width="4"/><path d="M40 25 L45 55 L40 50 L35 55 Z" fill="#fff" stroke="#b91c1c" stroke-width="2"/><rect x="32" y="35" width="16" height="10" rx="5" fill="#fff" stroke="#b91c1c" stroke-width="2"/></svg>`;
+        badgeTitle = 'Core'; badgeColor = 'text-red-600';
         achievements.push('Firecracker!');
     } else if (score >= 7) {
-        badge = '🏅'; badgeTitle = 'Novice'; badgeColor = 'text-yellow-500';
+        badgeSVG = `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#fde68a" stroke="#b45309" stroke-width="4"/><polygon points="40,25 45,55 40,50 35,55" fill="#fff" stroke="#b45309" stroke-width="2"/><circle cx="40" cy="40" r="10" fill="#fff" stroke="#b45309" stroke-width="2"/></svg>`;
+        badgeTitle = 'Novice'; badgeColor = 'text-yellow-500';
         achievements.push('Confetti!');
     } else if (score >= 5) {
-        badge = '🎖️'; badgeTitle = 'Beginner'; badgeColor = 'text-green-600';
+        badgeSVG = `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#6ee7b7" stroke="#047857" stroke-width="4"/><rect x="30" y="30" width="20" height="20" rx="6" fill="#fff" stroke="#047857" stroke-width="2"/></svg>`;
+        badgeTitle = 'Beginner'; badgeColor = 'text-green-600';
     } else {
-        badge = '🔰'; badgeTitle = 'Newbie'; badgeColor = 'text-gray-500';
+        badgeSVG = `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#d1d5db" stroke="#374151" stroke-width="4"/><rect x="34" y="34" width="12" height="12" rx="3" fill="#fff" stroke="#374151" stroke-width="2"/></svg>`;
+        badgeTitle = 'Newbie'; badgeColor = 'text-gray-500';
     }
-    resultsBadge.innerHTML = `<span class="text-5xl ${badgeColor}">${badge}</span><div class="font-bold text-xl mt-1 ${badgeColor}">${badgeTitle} Badge</div>`;
+    resultsBadge.innerHTML = `<div class="flex flex-col items-center"><span class="block mb-2">${badgeSVG}</span><div class="font-bold text-xl mt-1 ${badgeColor}">${badgeTitle} Badge</div></div>`;
     // Achievements
     resultsAchievements.innerHTML = achievements.length ? `<div class="font-mono text-lg text-blue-500">${achievements.join(', ')}</div>` : '';
     // Celebration effects: always fire confetti
@@ -297,21 +318,7 @@ function renderLeaderboard() {
                 </div>
             `;
         }).join("");
-    // Render for both main leaderboard and quiz page leaderboard
-    const leaderboardRows = document.getElementById("leaderboard-rows");
-    const quizLeaderboardRows = document.getElementById("quiz-leaderboard-rows");
-    if (leaderboardRows) {
-        leaderboardRows.innerHTML = rows;
-        leaderboardRows.style.opacity = 0;
-        leaderboardRows.style.transition = 'opacity 0.6s';
-        setTimeout(() => leaderboardRows.style.opacity = 1, 50);
-    }
-    if (quizLeaderboardRows) {
-        quizLeaderboardRows.innerHTML = rows;
-        quizLeaderboardRows.style.opacity = 0;
-        quizLeaderboardRows.style.transition = 'opacity 0.6s';
-        setTimeout(() => quizLeaderboardRows.style.opacity = 1, 50);
-    }
+    // Leaderboard rendering removed
 }
 
 // --- Navigation for Leaderboard ---
@@ -490,7 +497,7 @@ function renderLeaderboard() {
                         instructionsScreen.classList.add('hidden');
                         quizScreen.classList.add('hidden');
                         screen.classList.remove('hidden');
-                        if (screen === quizScreen) renderLeaderboard();
+                        // Leaderboard rendering removed
                         AOS.refresh();
                         feather.replace();
                     }
@@ -753,4 +760,3 @@ function renderLeaderboard() {
     </script>
 </body>
 </html>
-  
