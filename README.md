@@ -1,4 +1,4 @@
-QuizBit 🚀
+#QuizBit 🚀
 
 Test your coding knowledge. Earn badges. Level up your dev skills.
 
