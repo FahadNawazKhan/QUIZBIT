@@ -2,27 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"
-    <title>QuizBit - Programming Fundamentals Quiz</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-        <link rel="stylesheet" href="style.css">
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-        <script src="https://unpkg.com/feather-icons"></script>
-        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-        <style>
-            .lang-card {
-                transition: transform 0.2s cubic-bezier(.4,2,.6,1), box-shadow 0.2s;
-            }
-            .lang-card:hover {
-                transform: scale(1.04) rotate(-2deg);
-                box-shadow: 0 10px 24px 0 rgba(99,102,241,0.15);
-            
-            }
-    
-            
-        </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizBit - Multi-Language Quiz App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+        
     
 </head>
 <body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
@@ -54,21 +43,6 @@
                     <button id="results-home" class="mt-4 bg-gradient-to-r from-pink-500 to-indigo-500 text-white px-8 py-3 rounded-xl font-bold text-lg shadow-lg hover:from-indigo-600 hover:to-pink-600 transition-all duration-200">Back to Home</button>
                 </div>
             </div>
-@keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-@keyframes fade-in-up {
-    from { opacity: 0; transform: translateY(40px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-@keyframes bounce-slow {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-16px); }
-}
-.animate-fade-in { animation: fade-in 1s ease; }
-.animate-fade-in-up { animation: fade-in-up 1s cubic-bezier(.4,2,.6,1); }
-.animate-bounce-slow { animation: bounce-slow 2.5s infinite; }
         </div>
         <!-- Home Screen: Language Selection -->
         <div id="home-screen" class="bg-white rounded-xl shadow-lg p-8" data-aos="fade-up">
@@ -270,56 +244,7 @@ function fireFirecrackers() {
         }
     }
 }
-function showPetalShower() {
-    // Simple petal shower using emoji
-    let petals = '';
-    for (let i = 0; i < 30; i++) {
-        petals += `<span style="position:absolute;left:${Math.random()*90}vw;top:-5vh;font-size:${Math.random()*2+2}rem;animation:petal-fall ${2+Math.random()*2}s linear ${Math.random()}s forwards;">🌸</span>`;
-    }
-    resultsCelebration.innerHTML = `<div style="position:relative;width:100%;height:80px;">${petals}</div>`;
-}
-function playSereneMusic() {
-    // Play a serene music (royalty-free, short loop)
-    let audio = document.getElementById('serene-music');
-    if (!audio) {
-        audio = document.createElement('audio');
-        audio.id = 'serene-music';
-        audio.src = 'https://cdn.pixabay.com/audio/2022/10/16/audio_12b6b9b6b2.mp3'; // Royalty-free serene music
-        audio.loop = true;
-        resultsScreen.appendChild(audio);
-    }
-    audio.volume = 0.3;
-    audio.play();
-}
-// Petal fall animation
-const style = document.createElement('style');
-style.innerHTML = `@keyframes petal-fall { to { top: 90vh; opacity: 0.7; } }`;
-document.head.appendChild(style);
-// --- Leaderboard Data and Render ---
-const leaderboardData = [
-    { name: "Alice", score: 10 },
-    { name: "Bob", score: 8 },
-    { name: "Charlie", score: 7 },
-    { name: "Dana", score: 5 },
-    { name: "Eve", score: 3 }
-];
 
-function renderLeaderboard() {
-    const rows = leaderboardData
-        .sort((a, b) => b.score - a.score)
-        .map((entry, i) => {
-            const width = Math.max(10, entry.score * 10) + "%";
-            return `
-                <div class="leaderboard-row flex items-center gap-3 mb-3">
-                    <span class="leaderboard-rank font-mono text-lg text-yellow-500 w-8">#${i + 1}</span>
-                    <span class="leaderboard-name font-mono text-base text-gray-700 w-32 truncate">${entry.name}</span>
-                    <div class="leaderboard-bar flex-1 h-8 rounded bg-gradient-to-r from-pink-400 to-indigo-500 shadow-inner" style="width:${width}; image-rendering: pixelated;"></div>
-                    <span class="leaderboard-score font-mono text-lg text-blue-600 w-10 text-right ml-2">${entry.score}</span>
-                </div>
-            `;
-        }).join("");
-    // Leaderboard rendering removed
-}
 
 // --- Navigation for Leaderboard ---
 // (Old leaderboard navigation removed)
@@ -562,11 +487,7 @@ function renderLeaderboard() {
                         progressBar.style.width = `${((currentQuestion + 1) / quizQuestions.length) * 100}%`;
                         nextQuestionBtn.disabled = true;
                         // Change quiz page background to red after 5th question
-                        if (currentQuestion >= 5) {
-                            quizScreen.classList.add('bg-red-100');
-                        } else {
-                            quizScreen.classList.remove('bg-red-100');
-                        }
+                      
                     }
 
                     function selectOption(idx, el) {
@@ -648,115 +569,6 @@ function renderLeaderboard() {
                     homeScreen.classList.add('hidden');
                     loginScreen.style.display = '';
                             </script>
-            } else {
-                finishQuiz();
-            }
-        }
-
-        // Finish the quiz
-        function finishQuiz() {
-            clearInterval(timerInterval);
-            quizScreen.classList.add('hidden');
-            resultsScreen.classList.remove('hidden');
-            if (window.AOS) AOS.refresh();
-            
-            const percentage = Math.round((score / quizQuestions.length) * 100);
-            finalScoreElement.textContent = `${score}/${quizQuestions.length} (${percentage}%)`;
-            correctAnswersElement.textContent = score;
-            
-            // Calculate time taken
-            const minutesTaken = Math.floor((300 - timeLeft) / 60);
-            const secondsTaken = (300 - timeLeft) % 60;
-            timeTakenElement.textContent = `${minutesTaken}:${secondsTaken < 10 ? '0' : ''}${secondsTaken}`;
-            
-            // Determine badge
-            let badgeName, badgeImage;
-            if (percentage >= 86) {
-                badgeName = "Expert Coder";
-                badgeImage = "http://static.photos/technology/200x200/4";
-            } else if (percentage >= 71) {
-                badgeName = "Proficient Coder";
-                badgeImage = "http://static.photos/technology/200x200/3";
-            } else if (percentage >= 51) {
-                badgeName = "Adept Coder";
-                badgeImage = "http://static.photos/technology/200x200/2";
-            } else {
-                badgeName = "Novice Coder";
-                badgeImage = "http://static.photos/technology/200x200/1";
-            }
-            
-            badgeNameElement.textContent = badgeName;
-            earnedBadgeElement.src = badgeImage;
-            
-            // Fire confetti
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
-        }
-
-        // Start timer
-        function startTimer() {
-            updateTimerDisplay();
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    finishQuiz();
-                }
-            }, 1000);
-        }
-
-        // Update timer display
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-
-        // Quit quiz
-        function quitQuiz() {
-            clearInterval(timerInterval);
-            if (confirm('Are you sure you want to quit? Your progress will be lost.')) {
-                quizScreen.classList.add('hidden');
-                introScreen.classList.remove('hidden');
-                resetQuiz();
-            }
-        }
-
-        // Restart quiz
-        function restartQuiz() {
-            resultsScreen.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
-            resetQuiz();
-            startQuiz();
-        }
-
-        // View badges
-        function viewBadges() {
-            resultsScreen.classList.add('hidden');
-            badgesScreen.classList.remove('hidden');
-            if (window.AOS) AOS.refresh();
-        }
-
-        // Back to results
-        function backToResults() {
-            badgesScreen.classList.add('hidden');
-            resultsScreen.classList.remove('hidden');
-            if (window.AOS) AOS.refresh();
-        }
-
-        // Reset quiz state
-        function resetQuiz() {
-            currentQuestion = 0;
-            score = 0;
-            selectedOption = null;
-            timeLeft = 300;
-            quizStarted = false;
-        }
     </script>
 </body>
 </html>
