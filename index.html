@@ -2,128 +2,131 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"
     <title>QuizBit - Programming Fundamentals Quiz</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-        .badge-card {
-            transition: all 0.3s ease;
-        }
-        .badge-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .progress-bar {
-            transition: width 0.5s ease;
-        }
-        .option-card {
-            transition: all 0.2s ease;
-        }
-        .option-card:hover {
-            transform: translateX(5px);
-        }
-        .correct-answer {
-            background-color: #10b981 !important;
-            color: white !important;
-        }
-        .wrong-answer {
-            background-color: #ef4444 !important;
-            color: white !important;
-        }
-        .confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1000;
-        }
-    </style>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+        <script src="https://unpkg.com/feather-icons"></script>
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+        <style>
+            .lang-card {
+                transition: transform 0.2s cubic-bezier(.4,2,.6,1), box-shadow 0.2s;
+            }
+            .lang-card:hover {
+                transform: scale(1.04) rotate(-2deg);
+                box-shadow: 0 10px 24px 0 rgba(99,102,241,0.15);
+            
+            }
+    
+            
+        </style>
+    
 </head>
 <body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-    <div id="confetti-container" class="confetti-container"></div>
-    
-    <div id="app" class="container mx-auto px-4 py-8 max-w-4xl">
-        <!-- Auth Screen -->
-        <div id="auth-screen" class="bg-white rounded-xl shadow-lg p-8 text-center" data-aos="fade-up">
-            <div class="flex justify-center mb-6">
-                <div class="w-20 h-20 bg-indigo-600 rounded-xl flex items-center justify-center">
-                    <i data-feather="code" class="text-white w-10 h-10"></i>
-                </div>
+    <!-- Login Screen -->
+    <div id="login-screen" class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-200 to-blue-100 absolute inset-0 z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-10 w-full max-w-md text-center" data-aos="zoom-in">
+            <h1 class="text-4xl font-extrabold mb-6 text-indigo-700">QuizBit</h1>
+            <p class="mb-8 text-gray-600 text-lg">Welcome! Please log in to continue.</p>
+            <div class="flex gap-4 mb-6 justify-center">
+                <button id="student-login" class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition">Student Login</button>
+                <button id="staff-login" class="bg-amber-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-amber-600 transition">Staff Login</button>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome to QuizBit</h1>
-            <p class="text-gray-600 mb-8">Test your coding knowledge. Earn badges. Level up your dev skills.</p>
-            
-            <div class="space-y-4 max-w-xs mx-auto">
-                <button id="google-auth" class="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 hover:bg-gray-50 transition">
-                    <i data-feather="log-in" class="w-5 h-5"></i>
-                    Sign in with Google
-                </button>
-                <button id="email-auth" class="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white rounded-lg px-4 py-3 hover:bg-indigo-700 transition">
-                    <i data-feather="mail" class="w-5 h-5"></i>
-                    Sign in with Email
-                </button>
-            </div>
+            <input id="login-name" type="text" placeholder="Enter your name" class="w-full px-4 py-2 rounded border border-gray-300 mb-4 text-lg" />
+            <button id="login-continue" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">Continue</button>
         </div>
-
-        <!-- Quiz Intro Screen -->
-        <div id="intro-screen" class="hidden bg-white rounded-xl shadow-lg p-8" data-aos="fade-up">
+    </div>
+    <div id="confetti-container" class="confetti-container"></div>
+    <div id="app" class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden bg-white rounded-xl shadow-lg p-10 max-w-xl mx-auto flex flex-col items-center justify-center">
+            <div id="results-celebration" class="w-full flex flex-col items-center mb-6"></div>
+            <h2 class="text-4xl font-extrabold text-indigo-700 mb-2">Quiz Results</h2>
+            <div id="results-score" class="text-3xl font-bold mb-2"></div>
+            <div id="results-badge" class="mb-2"></div>
+            <div id="results-achievements" class="mb-4"></div>
+            <button id="results-home" class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-indigo-700 transition">Back to Home</button>
+        </div>
+        <!-- Home Screen: Language Selection -->
+        <div id="home-screen" class="bg-white rounded-xl shadow-lg p-8" data-aos="fade-up">
+            <div class="flex flex-col items-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">Welcome to QuizBit</h1>
+                <!-- Leaderboard button removed -->
+                <p class="text-gray-600 mb-8 text-center">Choose a programming language to test your skills!</p>
+            </div>
+            <div id="language-cards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8"></div>
+        <!-- Leaderboard Screen -->
+        <div id="leaderboard-screen" class="hidden bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-extrabold text-indigo-700">Leaderboard</h2>
+                <button id="back-to-home" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg font-medium hover:bg-indigo-200 transition">Back</button>
+            </div>
+            <div id="leaderboard-rows"></div>
+        </div>
+        </div>
+        <!-- Instructions Screen -->
+        <div id="instructions-screen" class="hidden bg-white rounded-xl shadow-lg p-8" data-aos="fade-up">
             <div class="flex items-center gap-4 mb-6">
-                <div class="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center">
-                    <i data-feather="code" class="text-white w-6 h-6"></i>
+                <div id="selected-lang-icon" class="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center"></div>
+                <div>
+                    <h2 id="selected-lang-name" class="text-2xl font-bold text-gray-800"></h2>
+                    <div id="selected-difficulty" class="text-indigo-600 font-medium"></div>
                 </div>
-                <h1 class="text-2xl font-bold text-gray-800">Programming Fundamentals Quiz</h1>
             </div>
-            
             <div class="mb-8">
-                <p class="text-gray-700 mb-4">Test your knowledge of basic programming concepts and earn badges based on your performance!</p>
-                
-                <div class="bg-indigo-50 rounded-lg p-4 mb-6">
-                    <h3 class="font-semibold text-indigo-800 mb-2 flex items-center gap-2">
-                        <i data-feather="award" class="w-4 h-4"></i>
-                        Badge System
-                    </h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="badge-card bg-white p-3 rounded-lg border border-gray-200 flex flex-col items-center">
-                            <img src="http://static.photos/technology/200x200/1" alt="Novice Badge" class="w-16 h-16 mb-2 rounded-full">
-                            <span class="text-xs font-medium text-gray-700">Novice (0-50%)</span>
-                        </div>
-                        <div class="badge-card bg-white p-3 rounded-lg border border-gray-200 flex flex-col items-center">
-                            <img src="http://static.photos/technology/200x200/2" alt="Adept Badge" class="w-16 h-16 mb-2 rounded-full">
-                            <span class="text-xs font-medium text-gray-700">Adept (51-70%)</span>
-                        </div>
-                        <div class="badge-card bg-white p-3 rounded-lg border border-gray-200 flex flex-col items-center">
-                            <img src="http://static.photos/technology/200x200/3" alt="Proficient Badge" class="w-16 h-16 mb-2 rounded-full">
-                            <span class="text-xs font-medium text-gray-700">Proficient (71-85%)</span>
-                        </div>
-                        <div class="badge-card bg-white p-3 rounded-lg border border-gray-200 flex flex-col items-center">
-                            <img src="http://static.photos/technology/200x200/4" alt="Expert Badge" class="w-16 h-16 mb-2 rounded-full">
-                            <span class="text-xs font-medium text-gray-700">Expert (86-100%)</span>
-                        </div>
-                    </div>
-                </div>
-                
+                <h3 class="font-semibold text-gray-800 mb-2">Quiz Instructions</h3>
+                <ul class="list-disc list-inside text-gray-700 mb-4">
+                    <li>Answer all questions before the timer runs out.</li>
+                    <li>Each question has one correct answer.</li>
+                    <li>Difficulty affects question complexity and time limit.</li>
+                </ul>
                 <div class="flex items-center gap-2 text-gray-600 mb-6">
-                    <i data-feather="info" class="w-4 h-4"></i>
-                    <span class="text-sm">10 questions • 5 minutes • Multiple choice</span>
+                    <i data-feather="clock" class="w-4 h-4"></i>
+                    <span id="instructions-timer" class="text-sm">05:00</span>
                 </div>
             </div>
-            
-            <button id="start-quiz" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition flex items-center justify-center gap-2">
-                <i data-feather="play" class="w-5 h-5"></i>
-                Start Quiz
+            <button id="continue-to-quiz" class="w-full bg-indigo-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2">
+                <i data-feather="play" class="w-6 h-6"></i>
+                Continue
             </button>
+        </div>
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden bg-white rounded-xl shadow-lg p-6 md:p-8">
+            <!-- Leaderboard on Quiz Page -->
+            <div id="quiz-leaderboard" class="mb-8">
+                <h3 class="text-xl font-bold text-indigo-700 mb-2">Leaderboard</h3>
+                <div id="quiz-leaderboard-rows"></div>
+            </div>
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center gap-2">
+                    <i data-feather="clock" class="w-5 h-5 text-gray-500"></i>
+                    <span id="timer" class="font-medium text-gray-700">05:00</span>
+                </div>
+                <div class="text-right">
+                    <span id="question-counter" class="font-medium text-gray-700">1/10</span>
+                </div>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-8">
+                <div id="progress-bar" class="progress-bar bg-indigo-600 h-2.5 rounded-full" style="width: 10%"></div>
+            </div>
+            <div id="question-container" class="mb-8"></div>
+            <div class="flex justify-between">
+                <button id="quit-quiz" class="text-gray-500 hover:text-gray-700 flex items-center gap-1">
+                    <i data-feather="x" class="w-4 h-4"></i>
+                    Quit
+                </button>
+                <button id="next-question" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Next
+                    <i data-feather="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        
+            </div>
+            
+            
         </div>
 
         <!-- Quiz Screen -->
@@ -188,311 +191,456 @@
                 
                 <div class="bg-gray-50 rounded-lg p-4 mb-8">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-gray-700">Your score:</span>
-                        <span id="final-score" class="font-bold text-indigo-600">8/10 (80%)</span>
-                    </div>
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-gray-700">Correct answers:</span>
-                        <span id="correct-answers" class="font-bold text-green-600">8</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Time taken:</span>
-                        <span id="time-taken" class="font-bold text-blue-600">03:45</span>
-                    </div>
-                </div>
-                
-                <div class="space-y-3">
-                    <button id="view-badges" class="w-full bg-white border border-indigo-600 text-indigo-600 py-3 rounded-lg font-medium hover:bg-indigo-50 transition flex items-center justify-center gap-2">
-                        <i data-feather="award" class="w-5 h-5"></i>
-                        View All Badges
-                    </button>
-                    <button id="restart-quiz" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition flex items-center justify-center gap-2">
-                        <i data-feather="refresh-cw" class="w-5 h-5"></i>
-                        Try Again
-                    </button>
-                </div>
-            </div>
-        </div>
+                            <script>
+// --- Results Celebration Logic ---
+const resultsScreen = document.getElementById('results-screen');
+const resultsScore = document.getElementById('results-score');
+const resultsBadge = document.getElementById('results-badge');
+const resultsAchievements = document.getElementById('results-achievements');
+const resultsCelebration = document.getElementById('results-celebration');
+const resultsHomeBtn = document.getElementById('results-home');
 
-        <!-- Badges Screen -->
-        <div id="badges-screen" class="hidden bg-white rounded-xl shadow-lg p-8">
-            <div class="flex items-center justify-between mb-8">
-                <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                    <i data-feather="award" class="w-6 h-6 text-yellow-500"></i>
-                    Your Badges
-                </h2>
-                <button id="back-to-results" class="text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                    <i data-feather="arrow-left" class="w-4 h-4"></i>
-                    Back
-                </button>
-            </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <div class="badge-card bg-white p-4 rounded-xl border border-gray-200 flex flex-col items-center text-center">
-                    <div class="w-20 h-20 mb-3 relative">
-                        <img src="http://static.photos/technology/200x200/1" alt="Novice Badge" class="w-full h-full rounded-full border-2 border-gray-200">
-                        <div class="absolute -right-1 -top-1 bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
-                            <i data-feather="check" class="w-3 h-3"></i>
-                        </div>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 mb-1">Novice Coder</h3>
-                    <p class="text-xs text-gray-500">Score 0-50%</p>
-                    <p class="text-xs text-gray-500 mt-1">Earned: 12/05/2023</p>
-                </div>
-                
-                <div class="badge-card bg-white p-4 rounded-xl border border-gray-200 flex flex-col items-center text-center">
-                    <div class="w-20 h-20 mb-3 relative">
-                        <img src="http://static.photos/technology/200x200/2" alt="Adept Badge" class="w-full h-full rounded-full border-2 border-gray-200">
-                        <div class="absolute -right-1 -top-1 bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
-                            <i data-feather="check" class="w-3 h-3"></i>
-                        </div>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 mb-1">Adept Coder</h3>
-                    <p class="text-xs text-gray-500">Score 51-70%</p>
-                    <p class="text-xs text-gray-500 mt-1">Earned: 15/05/2023</p>
-                </div>
-                
-                <div class="badge-card bg-white p-4 rounded-xl border border-gray-200 flex flex-col items-center text-center">
-                    <div class="w-20 h-20 mb-3 relative">
-                        <img src="http://static.photos/technology/200x200/3" alt="Proficient Badge" class="w-full h-full rounded-full border-2 border-indigo-200">
-                        <div class="absolute -right-1 -top-1 bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
-                            <i data-feather="check" class="w-3 h-3"></i>
-                        </div>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 mb-1">Proficient Coder</h3>
-                    <p class="text-xs text-gray-500">Score 71-85%</p>
-                    <p class="text-xs text-gray-500 mt-1">Earned: Today</p>
-                </div>
-                
-                <div class="badge-card bg-white p-4 rounded-xl border border-gray-200 flex flex-col items-center text-center opacity-50">
-                    <div class="w-20 h-20 mb-3 relative">
-                        <img src="http://static.photos/technology/200x200/4" alt="Expert Badge" class="w-full h-full rounded-full border-2 border-gray-200">
-                        <div class="absolute -right-1 -top-1 bg-gray-300 text-white rounded-full w-5 h-5 flex items-center justify-center">
-                            <i data-feather="lock" class="w-3 h-3"></i>
-                        </div>
-                    </div>
-                    <h3 class="font-semibold text-gray-800 mb-1">Expert Coder</h3>
-                    <p class="text-xs text-gray-500">Score 86-100%</p>
-                    <p class="text-xs text-gray-500 mt-1">Not earned yet</p>
-                </div>
-            </div>
-        </div>
-    </div>
+function showResults(score, total) {
+    // Hide other screens
+    quizScreen.classList.add('hidden');
+    resultsScreen.classList.remove('hidden');
+    // Score display
+    resultsScore.textContent = `Score: ${score} / ${total}`;
+    // Badge logic
+    let badge = '', badgeTitle = '', badgeColor = '', achievements = [];
+    if (score >= 9) {
+        badge = '🌸'; badgeTitle = 'Legend'; badgeColor = 'text-pink-600';
+        achievements.push('Flower Shower!');
+    } else if (score >= 8) {
+        badge = '🔥'; badgeTitle = 'Core'; badgeColor = 'text-red-600';
+        achievements.push('Firecracker!');
+    } else if (score >= 7) {
+        badge = '🏅'; badgeTitle = 'Novice'; badgeColor = 'text-yellow-500';
+        achievements.push('Confetti!');
+    } else if (score >= 5) {
+        badge = '🎖️'; badgeTitle = 'Beginner'; badgeColor = 'text-green-600';
+    } else {
+        badge = '🔰'; badgeTitle = 'Newbie'; badgeColor = 'text-gray-500';
+    }
+    resultsBadge.innerHTML = `<span class="text-5xl ${badgeColor}">${badge}</span><div class="font-bold text-xl mt-1 ${badgeColor}">${badgeTitle} Badge</div>`;
+    // Achievements
+    resultsAchievements.innerHTML = achievements.length ? `<div class="font-mono text-lg text-blue-500">${achievements.join(', ')}</div>` : '';
+    // Celebration effects: always fire confetti
+    resultsCelebration.innerHTML = '';
+    fireConfetti();
+}
 
-    <script>
-        // Initialize animations and icons
-        AOS.init();
-        feather.replace();
-        
-        // Quiz data
-        const quizQuestions = [
-            {
-                question: "What does HTML stand for?",
-                options: [
-                    "Hyper Text Markup Language",
-                    "Hyperlinks and Text Markup Language",
-                    "Home Tool Markup Language",
-                    "Hyper Transfer Markup Language"
-                ],
-                correctAnswer: 0
-            },
-            {
-                question: "Which of these is NOT a programming language?",
-                options: [
-                    "Python",
-                    "HTML",
-                    "Java",
-                    "C++"
-                ],
-                correctAnswer: 1
-            },
-            {
-                question: "What is the correct way to declare a JavaScript variable?",
-                options: [
-                    "variable name;",
-                    "var name;",
-                    "v name;",
-                    "variable = name;"
-                ],
-                correctAnswer: 1
-            },
-            {
-                question: "Which symbol is used for single-line comments in JavaScript?",
-                options: [
-                    "//",
-                    "<!-- -->",
-                    "/* */",
-                    "#"
-                ],
-                correctAnswer: 0
-            },
-            {
-                question: "What does CSS stand for?",
-                options: [
-                    "Computer Style Sheets",
-                    "Creative Style Sheets",
-                    "Cascading Style Sheets",
-                    "Colorful Style Sheets"
-                ],
-                correctAnswer: 2
-            },
-            {
-                question: "Which of these is a JavaScript framework?",
-                options: [
-                    "Django",
-                    "Flask",
-                    "React",
-                    "Laravel"
-                ],
-                correctAnswer: 2
-            },
-            {
-                question: "What will 'console.log(typeof 42)' output in JavaScript?",
-                options: [
-                    "string",
-                    "number",
-                    "integer",
-                    "float"
-                ],
-                correctAnswer: 1
-            },
-            {
-                question: "Which HTML tag is used to link a JavaScript file?",
-                options: [
-                    "<script>",
-                    "<js>",
-                    "<javascript>",
-                    "<link>"
-                ],
-                correctAnswer: 0
-            },
-            {
-                question: "What does API stand for?",
-                options: [
-                    "Application Programming Interface",
-                    "Automated Programming Interface",
-                    "Advanced Programming Instruction",
-                    "Application Process Integration"
-                ],
-                correctAnswer: 0
-            },
-            {
-                question: "Which method adds a new item to the end of an array in JavaScript?",
-                options: [
-                    "push()",
-                    "pop()",
-                    "shift()",
-                    "unshift()"
-                ],
-                correctAnswer: 0
-            }
-        ];
+resultsHomeBtn.onclick = () => {
+    resultsScreen.classList.add('hidden');
+    homeScreen.classList.remove('hidden');
+};
 
-        // App state
-        let currentQuestion = 0;
-        let score = 0;
-        let selectedOption = null;
-        let timeLeft = 300; // 5 minutes in seconds
-        let timerInterval;
-        let quizStarted = false;
-
-        // DOM elements
-        const authScreen = document.getElementById('auth-screen');
-        const introScreen = document.getElementById('intro-screen');
-        const quizScreen = document.getElementById('quiz-screen');
-        const resultsScreen = document.getElementById('results-screen');
-        const badgesScreen = document.getElementById('badges-screen');
-        
-        const questionText = document.getElementById('question-text');
-        const optionsContainer = document.getElementById('options-container');
-        const questionCounter = document.getElementById('question-counter');
-        const progressBar = document.getElementById('progress-bar');
-        const nextQuestionBtn = document.getElementById('next-question');
-        const timerElement = document.getElementById('timer');
-        const finalScoreElement = document.getElementById('final-score');
-        const correctAnswersElement = document.getElementById('correct-answers');
-        const timeTakenElement = document.getElementById('time-taken');
-        const earnedBadgeElement = document.getElementById('earned-badge');
-        const badgeNameElement = document.getElementById('badge-name');
-
-        // Event listeners
-        document.getElementById('google-auth').addEventListener('click', startAuth);
-        document.getElementById('email-auth').addEventListener('click', startAuth);
-        document.getElementById('start-quiz').addEventListener('click', startQuiz);
-        document.getElementById('next-question').addEventListener('click', nextQuestion);
-        document.getElementById('quit-quiz').addEventListener('click', quitQuiz);
-        document.getElementById('restart-quiz').addEventListener('click', restartQuiz);
-        document.getElementById('view-badges').addEventListener('click', viewBadges);
-        document.getElementById('back-to-results').addEventListener('click', backToResults);
-
-        // Simulate authentication
-        function startAuth() {
-            authScreen.classList.add('hidden');
-            introScreen.classList.remove('hidden');
+// --- Celebration Effects ---
+function fireConfetti() {
+    if (window.confetti) {
+        confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+    }
+}
+function fireFirecrackers() {
+    // Simulate firecrackers with multiple confetti bursts
+    if (window.confetti) {
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => confetti({ particleCount: 50, spread: 120, startVelocity: 60, origin: { x: Math.random(), y: Math.random() * 0.5 } }), i * 300);
         }
+    }
+}
+function showPetalShower() {
+    // Simple petal shower using emoji
+    let petals = '';
+    for (let i = 0; i < 30; i++) {
+        petals += `<span style="position:absolute;left:${Math.random()*90}vw;top:-5vh;font-size:${Math.random()*2+2}rem;animation:petal-fall ${2+Math.random()*2}s linear ${Math.random()}s forwards;">🌸</span>`;
+    }
+    resultsCelebration.innerHTML = `<div style="position:relative;width:100%;height:80px;">${petals}</div>`;
+}
+function playSereneMusic() {
+    // Play a serene music (royalty-free, short loop)
+    let audio = document.getElementById('serene-music');
+    if (!audio) {
+        audio = document.createElement('audio');
+        audio.id = 'serene-music';
+        audio.src = 'https://cdn.pixabay.com/audio/2022/10/16/audio_12b6b9b6b2.mp3'; // Royalty-free serene music
+        audio.loop = true;
+        resultsScreen.appendChild(audio);
+    }
+    audio.volume = 0.3;
+    audio.play();
+}
+// Petal fall animation
+const style = document.createElement('style');
+style.innerHTML = `@keyframes petal-fall { to { top: 90vh; opacity: 0.7; } }`;
+document.head.appendChild(style);
+// --- Leaderboard Data and Render ---
+const leaderboardData = [
+    { name: "Alice", score: 10 },
+    { name: "Bob", score: 8 },
+    { name: "Charlie", score: 7 },
+    { name: "Dana", score: 5 },
+    { name: "Eve", score: 3 }
+];
 
-        // Start the quiz
-        function startQuiz() {
-            introScreen.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
-            quizStarted = true;
-            loadQuestion();
-            startTimer();
-        }
+function renderLeaderboard() {
+    const rows = leaderboardData
+        .sort((a, b) => b.score - a.score)
+        .map((entry, i) => {
+            const width = Math.max(10, entry.score * 10) + "%";
+            return `
+                <div class="leaderboard-row flex items-center gap-3 mb-3">
+                    <span class="leaderboard-rank font-mono text-lg text-yellow-500 w-8">#${i + 1}</span>
+                    <span class="leaderboard-name font-mono text-base text-gray-700 w-32 truncate">${entry.name}</span>
+                    <div class="leaderboard-bar flex-1 h-8 rounded bg-gradient-to-r from-pink-400 to-indigo-500 shadow-inner" style="width:${width}; image-rendering: pixelated;"></div>
+                    <span class="leaderboard-score font-mono text-lg text-blue-600 w-10 text-right ml-2">${entry.score}</span>
+                </div>
+            `;
+        }).join("");
+    // Render for both main leaderboard and quiz page leaderboard
+    const leaderboardRows = document.getElementById("leaderboard-rows");
+    const quizLeaderboardRows = document.getElementById("quiz-leaderboard-rows");
+    if (leaderboardRows) {
+        leaderboardRows.innerHTML = rows;
+        leaderboardRows.style.opacity = 0;
+        leaderboardRows.style.transition = 'opacity 0.6s';
+        setTimeout(() => leaderboardRows.style.opacity = 1, 50);
+    }
+    if (quizLeaderboardRows) {
+        quizLeaderboardRows.innerHTML = rows;
+        quizLeaderboardRows.style.opacity = 0;
+        quizLeaderboardRows.style.transition = 'opacity 0.6s';
+        setTimeout(() => quizLeaderboardRows.style.opacity = 1, 50);
+    }
+}
 
-        // Load a question
-        function loadQuestion() {
-            const question = quizQuestions[currentQuestion];
-            questionText.textContent = question.question;
-            
-            optionsContainer.innerHTML = '';
-            question.options.forEach((option, index) => {
-                const optionElement = document.createElement('div');
-                optionElement.className = 'option-card bg-gray-50 hover:bg-gray-100 rounded-lg p-4 cursor-pointer border border-gray-200';
-                optionElement.textContent = option;
-                optionElement.dataset.index = index;
-                optionElement.addEventListener('click', selectOption);
-                optionsContainer.appendChild(optionElement);
-            });
-            
-            questionCounter.textContent = `${currentQuestion + 1}/${quizQuestions.length}`;
-            progressBar.style.width = `${((currentQuestion + 1) / quizQuestions.length) * 100}%`;
-            nextQuestionBtn.disabled = true;
-        }
+// --- Navigation for Leaderboard ---
+// (Old leaderboard navigation removed)
+                    // --- QuizBit Multi-Language Quiz App ---
+                    AOS.init();
+                    feather.replace();
 
-        // Select an option
-        function selectOption(e) {
-            if (selectedOption !== null) return;
-            
-            selectedOption = parseInt(e.target.dataset.index);
-            const correctIndex = quizQuestions[currentQuestion].correctAnswer;
-            
-            // Highlight selected option
-            const options = document.querySelectorAll('.option-card');
-            options.forEach((option, index) => {
-                if (index === selectedOption) {
-                    option.classList.add(index === correctIndex ? 'correct-answer' : 'wrong-answer');
-                } else if (index === correctIndex) {
-                    option.classList.add('correct-answer');
-                }
-                option.style.pointerEvents = 'none';
-            });
-            
-            // Update score if correct
-            if (selectedOption === correctIndex) {
-                score++;
-            }
-            
-            nextQuestionBtn.disabled = false;
-        }
+                    // --- Login Logic ---
+                    const loginScreen = document.getElementById('login-screen');
+                    // const homeScreen = document.getElementById('home-screen'); // Already declared elsewhere
+                    let loginRole = null;
+                    let loginName = '';
+                    document.getElementById('student-login').onclick = function() {
+                        loginRole = 'student';
+                        document.getElementById('student-login').classList.add('ring-4', 'ring-indigo-300');
+                        document.getElementById('staff-login').classList.remove('ring-4', 'ring-indigo-300');
+                    };
+                    document.getElementById('staff-login').onclick = function() {
+                        loginRole = 'staff';
+                        document.getElementById('staff-login').classList.add('ring-4', 'ring-amber-300');
+                        document.getElementById('student-login').classList.remove('ring-4', 'ring-indigo-300');
+                    };
+                    document.getElementById('login-continue').onclick = function() {
+                        loginName = document.getElementById('login-name').value.trim();
+                        if (!loginRole) {
+                            alert('Please select Student or Staff login.');
+                            return;
+                        }
+                        if (!loginName) {
+                            alert('Please enter your name.');
+                            return;
+                        }
+                        loginScreen.style.display = 'none';
+                        homeScreen.classList.remove('hidden');
+                        // Optionally, store loginName and loginRole for later use
+                    };
 
-        // Move to next question
-        function nextQuestion() {
-            selectedOption = null;
-            currentQuestion++;
-            
-            if (currentQuestion < quizQuestions.length) {
-                loadQuestion();
+                    // Language data
+                    const languages = [
+                        {
+                            name: 'Python',
+                            icon: '<i data-feather="code"></i>',
+                            tagline: 'Test your Python skills',
+                            color: 'bg-yellow-100',
+                            questions: [
+                                // Easy
+                                { q: 'What is the output of print(2 ** 3)?', opts: ['6', '8', '9', '5'], a: 1 },
+                                { q: 'Which keyword is used for function in Python?', opts: ['func', 'def', 'function', 'lambda'], a: 1 },
+                                { q: 'What is a correct file extension for Python files?', opts: ['.py', '.pt', '.pyt', '.python'], a: 0 },
+                                { q: 'How do you insert COMMENTS in Python code?', opts: ['//', '#', '<!-- -->', '/* */'], a: 1 },
+                                { q: 'Which data type is immutable?', opts: ['list', 'dict', 'set', 'tuple'], a: 3 },
+                                // Hard
+                                { q: 'What is the output of print("5" * 2)?', opts: ['10', '55', 'TypeError', 'Error'], a: 1 },
+                                { q: 'Which of these is a Python tuple?', opts: ['[1,2,3]', '{1,2,3}', '(1,2,3)', '<1,2,3>'], a: 2 },
+                                { q: 'What does the zip() function do?', opts: ['Compresses files', 'Combines iterables', 'Sorts lists', 'None'], a: 1 },
+                                { q: 'What is the result of bool([])?', opts: ['True', 'False', 'Error', 'None'], a: 1 },
+                                { q: 'Which method removes whitespace from both ends of a string?', opts: ['strip()', 'trim()', 'remove()', 'clean()'], a: 0 }
+                            ]
+                        },
+                        {
+                            name: 'JavaScript',
+                            icon: '<i data-feather="zap"></i>',
+                            tagline: 'Test your JavaScript skills',
+                            color: 'bg-yellow-50',
+                            questions: [
+                                // Easy
+                                { q: 'Which symbol is used for single-line comments?', opts: ['//', '<!-- -->', '/* */', '#'], a: 0 },
+                                { q: 'What does DOM stand for?', opts: ['Document Object Model', 'Data Object Model', 'Desktop Oriented Model', 'Document Oriented Model'], a: 0 },
+                                { q: 'Which method adds an item to end of array?', opts: ['push()', 'pop()', 'shift()', 'unshift()'], a: 0 },
+                                { q: 'How do you declare a variable?', opts: ['var x;', 'variable x;', 'v x;', 'let x;'], a: 0 },
+                                { q: 'What is typeof NaN?', opts: ['number', 'string', 'undefined', 'object'], a: 0 },
+                                // Hard
+                                { q: 'What does the Array.prototype.map() method do?', opts: ['Filters array', 'Transforms array', 'Sorts array', 'Joins array'], a: 1 },
+                                { q: 'Which of these is a valid arrow function?', opts: ['function() => {}', '() => {}', '=> {}', 'function => {}'], a: 1 },
+                                { q: 'What is the output of [1,2,3].find(x => x > 1)?', opts: ['1', '2', '3', 'undefined'], a: 1 },
+                                { q: 'What is the result of typeof null?', opts: ['object', 'null', 'undefined', 'number'], a: 0 },
+                                { q: 'Which method merges two arrays?', opts: ['concat()', 'merge()', 'append()', 'join()'], a: 0 }
+                            ]
+                        },
+                        {
+                            name: 'Java',
+                            icon: '<i data-feather="coffee"></i>',
+                            tagline: 'Test your Java skills',
+                            color: 'bg-orange-50',
+                            questions: [
+                                // Easy
+                                { q: 'Which keyword is used to inherit a class?', opts: ['this', 'super', 'extends', 'implements'], a: 2 },
+                                { q: 'What is the entry point of Java program?', opts: ['start()', 'main()', 'run()', 'init()'], a: 1 },
+                                { q: 'Which is not a Java primitive type?', opts: ['int', 'float', 'String', 'char'], a: 2 },
+                                { q: 'Which company developed Java?', opts: ['Microsoft', 'Apple', 'Sun Microsystems', 'Google'], a: 2 },
+                                { q: 'What is the file extension for Java?', opts: ['.jav', '.java', '.jv', '.class'], a: 1 },
+                                // Hard
+                                { q: 'Which of these is not a Java access modifier?', opts: ['public', 'private', 'protected', 'package'], a: 3 },
+                                { q: 'What is the size of int in Java?', opts: ['2 bytes', '4 bytes', '8 bytes', 'Depends on system'], a: 1 },
+                                { q: 'Which method is used to start a thread?', opts: ['run()', 'start()', 'execute()', 'init()'], a: 1 },
+                                { q: 'What is the superclass of all classes in Java?', opts: ['Object', 'Class', 'Main', 'Base'], a: 0 },
+                                { q: 'Which keyword is used for exception handling?', opts: ['try', 'catch', 'throw', 'All of these'], a: 3 }
+                            ]
+                        },
+                        {
+                            name: 'C++',
+                            icon: '<i data-feather="cpu"></i>',
+                            tagline: 'Test your C++ skills',
+                            color: 'bg-blue-50',
+                            questions: [
+                                // Easy
+                                { q: 'Which symbol is used for single-line comments?', opts: ['//', '#', '/* */', '--'], a: 0 },
+                                { q: 'Who created C++?', opts: ['Dennis Ritchie', 'Bjarne Stroustrup', 'James Gosling', 'Guido van Rossum'], a: 1 },
+                                { q: 'What is the extension for C++ files?', opts: ['.cpp', '.c', '.cc', '.cp'], a: 0 },
+                                { q: 'Which is not a C++ data type?', opts: ['int', 'float', 'real', 'char'], a: 2 },
+                                { q: 'Which operator is used for input?', opts: ['>>', '<<', '==', '!='], a: 0 },
+                                // Hard
+                                { q: 'What is the output of sizeof(char)?', opts: ['1', '2', '4', '8'], a: 0 },
+                                { q: 'Which of these is not a loop in C++?', opts: ['for', 'while', 'repeat', 'do-while'], a: 2 },
+                                { q: 'Which header is needed for cout?', opts: ['<iostream>', '<stdio.h>', '<conio.h>', '<stdlib.h>'], a: 0 },
+                                { q: 'What is the result of 5/2 in C++?', opts: ['2', '2.5', '2.0', 'Error'], a: 0 },
+                                { q: 'Which keyword is used for dynamic memory?', opts: ['malloc', 'alloc', 'new', 'create'], a: 2 }
+                            ]
+                        },
+                        {
+                            name: 'Go',
+                            icon: '<i data-feather="activity"></i>',
+                            tagline: 'Test your Go skills',
+                            color: 'bg-green-50',
+                            questions: [
+                                // Easy
+                                { q: 'What is the keyword for defining a function?', opts: ['func', 'function', 'def', 'fn'], a: 0 },
+                                { q: 'What is the file extension for Go?', opts: ['.go', '.golang', '.g', '.gol'], a: 0 },
+                                { q: 'Who developed Go?', opts: ['Google', 'Microsoft', 'Apple', 'IBM'], a: 0 },
+                                { q: 'Which is not a Go data type?', opts: ['int', 'float32', 'real', 'string'], a: 2 },
+                                { q: 'How do you declare a variable?', opts: ['var x int', 'x := 5', 'let x = 5', 'int x'], a: 1 },
+                                // Hard
+                                { q: 'What is the output of len("GoLang")?', opts: ['5', '6', '7', 'Error'], a: 1 },
+                                { q: 'Which of these is not a Go keyword?', opts: ['defer', 'package', 'include', 'func'], a: 2 },
+                                { q: 'What is the zero value of int in Go?', opts: ['0', 'nil', 'undefined', 'None'], a: 0 },
+                                { q: 'Which function prints to console?', opts: ['print()', 'fmt.Println()', 'echo()', 'console.log()'], a: 1 },
+                                { q: 'Which symbol is used for short variable declaration?', opts: [':=', '=', '->', '::'], a: 0 }
+                            ]
+                        }
+                    ];
+
+                    const difficulties = [
+                        { label: 'Easy', value: 'easy', time: 300 },
+                        { label: 'Medium', value: 'medium', time: 180 },
+                        { label: 'Hard', value: 'hard', time: 90 }
+                    ];
+
+                    let selectedLang = null;
+                    let selectedDiff = difficulties[0];
+                    let quizQuestions = [];
+                    let currentQuestion = 0;
+                    let score = 0;
+                    let selectedOption = null;
+                    let timeLeft = 300;
+                    let timerInterval = null;
+
+                    const homeScreen = document.getElementById('home-screen');
+                    const instructionsScreen = document.getElementById('instructions-screen');
+                    const quizScreen = document.getElementById('quiz-screen');
+                    const languageCards = document.getElementById('language-cards');
+                    const selectedLangIcon = document.getElementById('selected-lang-icon');
+                    const selectedLangName = document.getElementById('selected-lang-name');
+                    const selectedDifficulty = document.getElementById('selected-difficulty');
+                    const instructionsTimer = document.getElementById('instructions-timer');
+                    const continueToQuizBtn = document.getElementById('continue-to-quiz');
+                    const questionContainer = document.getElementById('question-container');
+                    const timerElement = document.getElementById('timer');
+                    const questionCounter = document.getElementById('question-counter');
+                    const progressBar = document.getElementById('progress-bar');
+                    const nextQuestionBtn = document.getElementById('next-question');
+                    const quitQuizBtn = document.getElementById('quit-quiz');
+
+                    function showScreen(screen) {
+                        homeScreen.classList.add('hidden');
+                        instructionsScreen.classList.add('hidden');
+                        quizScreen.classList.add('hidden');
+                        screen.classList.remove('hidden');
+                        if (screen === quizScreen) renderLeaderboard();
+                        AOS.refresh();
+                        feather.replace();
+                    }
+
+                    function renderLanguageCards() {
+                        languageCards.innerHTML = '';
+                        languages.forEach((lang, idx) => {
+                            const card = document.createElement('div');
+                            card.className = `lang-card rounded-xl shadow-md p-6 flex flex-col items-center ${lang.color} cursor-pointer hover:shadow-xl`;
+                            card.innerHTML = `
+                                <div class="text-4xl mb-2">${lang.icon}</div>
+                                <div class="font-bold text-lg mb-1">${lang.name}</div>
+                                <div class="text-gray-600 text-sm mb-3">${lang.tagline}</div>
+                                <select class="difficulty-select mb-3 px-2 py-1 rounded border border-gray-300">
+                                    ${difficulties.map(d => `<option value="${d.value}">${d.label}</option>`).join('')}
+                                </select>
+                                <button class="start-btn bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition">Start</button>
+                            `;
+                            card.querySelector('.start-btn').onclick = () => {
+                                selectedLang = lang;
+                                const diffVal = card.querySelector('.difficulty-select').value;
+                                selectedDiff = difficulties.find(d => d.value === diffVal) || difficulties[0];
+                                quizQuestions = lang.questions;
+                                showInstructions();
+                            };
+                            languageCards.appendChild(card);
+                        });
+                        feather.replace();
+                    }
+
+                    function showInstructions() {
+                        selectedLangIcon.innerHTML = selectedLang.icon;
+                        selectedLangName.textContent = selectedLang.name;
+                        selectedDifficulty.textContent = selectedDiff.label;
+                        instructionsTimer.textContent = formatTime(selectedDiff.time);
+                        showScreen(instructionsScreen);
+                    }
+
+                    continueToQuizBtn.onclick = () => {
+                        timeLeft = selectedDiff.time;
+                        currentQuestion = 0;
+                        score = 0;
+                        showScreen(quizScreen);
+                        loadQuestion();
+                        startTimer();
+                    };
+
+                    function loadQuestion() {
+                        const q = quizQuestions[currentQuestion];
+                        questionContainer.innerHTML = `<h2 class="text-xl font-semibold text-gray-800 mb-6">${q.q}</h2>`;
+                        const optsDiv = document.createElement('div');
+                        optsDiv.className = 'space-y-3';
+                        q.opts.forEach((opt, idx) => {
+                            const optDiv = document.createElement('div');
+                            optDiv.className = 'option-card bg-gray-50 hover:bg-gray-100 rounded-lg p-4 cursor-pointer border border-gray-200';
+                            optDiv.textContent = opt;
+                            optDiv.onclick = () => selectOption(idx, optDiv);
+                            optsDiv.appendChild(optDiv);
+                        });
+                        questionContainer.appendChild(optsDiv);
+                        questionCounter.textContent = `${currentQuestion + 1}/${quizQuestions.length}`;
+                        progressBar.style.width = `${((currentQuestion + 1) / quizQuestions.length) * 100}%`;
+                        nextQuestionBtn.disabled = true;
+                        // Change quiz page background to red after 5th question
+                        if (currentQuestion >= 5) {
+                            quizScreen.classList.add('bg-red-100');
+                        } else {
+                            quizScreen.classList.remove('bg-red-100');
+                        }
+                    }
+
+                    function selectOption(idx, el) {
+                        if (selectedOption !== null) return;
+                        selectedOption = idx;
+                        const correctIdx = quizQuestions[currentQuestion].a;
+                        const options = questionContainer.querySelectorAll('.option-card');
+                        options.forEach((option, i) => {
+                            option.style.pointerEvents = 'none';
+                            option.classList.remove('wobble', 'shake', 'correct-answer', 'wrong-answer');
+                            void option.offsetWidth;
+                            if (i === selectedOption) {
+                                if (i === correctIdx) {
+                                    option.classList.add('correct-answer', 'wobble');
+                                } else {
+                                    option.classList.add('wrong-answer', 'shake');
+                                }
+                            } else if (i === correctIdx) {
+                                option.classList.add('correct-answer');
+                            }
+                            option.addEventListener('animationend', function handler() {
+                                option.classList.remove('wobble', 'shake');
+                                option.removeEventListener('animationend', handler);
+                            });
+                        });
+                        if (selectedOption === correctIdx) score++;
+                        nextQuestionBtn.disabled = false;
+                    }
+
+                    nextQuestionBtn.onclick = () => {
+                        selectedOption = null;
+                        currentQuestion++;
+                        if (currentQuestion < quizQuestions.length) {
+                            loadQuestion();
+                        } else {
+                            finishQuiz();
+                        }
+                    };
+
+                    function startTimer() {
+                        updateTimerDisplay();
+                        clearInterval(timerInterval);
+                        timerInterval = setInterval(() => {
+                            timeLeft--;
+                            updateTimerDisplay();
+                            if (timeLeft <= 0) {
+                                clearInterval(timerInterval);
+                                finishQuiz();
+                            }
+                        }, 1000);
+                    }
+
+                    function updateTimerDisplay() {
+                        timerElement.textContent = formatTime(timeLeft);
+                    }
+
+                    function formatTime(sec) {
+                        const m = Math.floor(sec / 60);
+                        const s = sec % 60;
+                        return `${m}:${s < 10 ? '0' : ''}${s}`;
+                    }
+
+                    function finishQuiz() {
+                        clearInterval(timerInterval);
+                        showResults(score, quizQuestions.length);
+                    }
+
+                    quitQuizBtn.onclick = () => {
+                        clearInterval(timerInterval);
+                        if (confirm('Are you sure you want to quit? Your progress will be lost.')) {
+                            showScreen(homeScreen);
+                            renderLanguageCards();
+                        }
+                    };
+
+                    // Initial render
+                    renderLanguageCards();
+                    // Only show home screen after login
+                    homeScreen.classList.add('hidden');
+                    loginScreen.style.display = '';
+                            </script>
             } else {
                 finishQuiz();
             }
@@ -503,6 +651,7 @@
             clearInterval(timerInterval);
             quizScreen.classList.add('hidden');
             resultsScreen.classList.remove('hidden');
+            if (window.AOS) AOS.refresh();
             
             const percentage = Math.round((score / quizQuestions.length) * 100);
             finalScoreElement.textContent = `${score}/${quizQuestions.length} (${percentage}%)`;
@@ -583,12 +732,14 @@
         function viewBadges() {
             resultsScreen.classList.add('hidden');
             badgesScreen.classList.remove('hidden');
+            if (window.AOS) AOS.refresh();
         }
 
         // Back to results
         function backToResults() {
             badgesScreen.classList.add('hidden');
             resultsScreen.classList.remove('hidden');
+            if (window.AOS) AOS.refresh();
         }
 
         // Reset quiz state
@@ -602,3 +753,4 @@
     </script>
 </body>
 </html>
+  
