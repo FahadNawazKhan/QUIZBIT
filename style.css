@@ -1,3 +1,12 @@
+/* Import font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+}
+
+/* Animations */
 @keyframes wobble {
     0% { transform: translateX(0); }
     15% { transform: translateX(-10px) rotate(-2deg); }
@@ -22,52 +31,58 @@
     animation: shake 0.4s;
 }
 
-.option-card.correct-answer {
-    background-color: #10b981 !important;
+/* Quiz option feedback */
+.correct-answer {
+    background-color: #10b981 !important; /* green */
     color: white !important;
     border-color: #10b981 !important;
 }
-.option-card.wrong-answer {
-    background-color: #ef4444 !important;
+
+.wrong-answer {
+    background-color: #ef4444 !important; /* red */
     color: white !important;
     border-color: #ef4444 !important;
 }
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-        .badge-card {
-            transition: all 0.3s ease;
-        }
-        .badge-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .progress-bar {
-            transition: width 0.5s ease;
-        }
-        .option-card {
-            transition: all 0.2s ease;
-        }
-        .option-card:hover {
-            transform: translateX(5px);
-        }
-        .correct-answer {
-            background-color: #10b981 !important;
-            color: white !important;
-        }
-        .wrong-answer {
-            background-color: #ef4444 !important;
-            color: white !important;
-        }
-        .confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1000;
-        }
-        
+
+/* Smooth transitions for interactive elements */
+button {
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+/* Confetti layer */
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* Progress bar */
+#progress-bar {
+    transition: width 0.5s ease-in-out;
+    height: 8px;
+    border-radius: 6px;
+    background: linear-gradient(to right, #3b82f6, #06b6d4);
+}
+
+/* Timer */
+#timer {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1f2937; /* default gray-800 */
+    margin-bottom: 10px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+#timer.low-time {
+    color: #dc2626; /* red */
+    font-weight: bold;
+    animation: shake 0.5s infinite;
+}
