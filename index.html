@@ -1,574 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QuizBit - Multi-Language Quiz App</title>
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+
+    <!-- AOS Animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-        
-    
-</head>
-<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-    <!-- Login Screen -->
-    <div id="login-screen" class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-200 to-blue-100 absolute inset-0 z-50">
-        <div class="bg-white rounded-xl shadow-2xl p-10 w-full max-w-md text-center" data-aos="zoom-in">
-            <h1 class="text-4xl font-extrabold mb-6 text-indigo-700">QuizBit</h1>
-            <p class="mb-8 text-gray-600 text-lg">Welcome! Please log in to continue.</p>
-            <div class="flex gap-4 mb-6 justify-center">
-                <button id="student-login" class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 transition">Student Login</button>
-                <button id="staff-login" class="bg-amber-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-amber-600 transition">Staff Login</button>
-            </div>
-            <input id="login-name" type="text" placeholder="Enter your name" class="w-full px-4 py-2 rounded border border-gray-300 mb-4 text-lg" />
-            <button id="login-continue" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">Continue</button>
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+    <!-- =========================
+     Login Screen (Production-Ready)
+========================== -->
+    <section
+      id="login-screen"
+      role="dialog"
+      aria-labelledby="login-title"
+      class="relative min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex items-center justify-center overflow-hidden"
+    >
+      <!-- Background Blobs -->
+      <div
+        class="absolute top-20 left-2 w-[500px] h-[500px] bg-pink-400/60 rounded-full mix-blend-multiply filter blur-[150px] opacity-70 animate-blob"
+      ></div>
+      <div
+        class="absolute top-20 right-32 w-[500px] h-[500px] bg-amber-400/60 rounded-full mix-blend-multiply filter blur-[150px] opacity-70 animate-blob animation-delay-2000"
+      ></div>
+      <div
+        class="hidden xl:block absolute bottom-10 left-32 w-[500px] h-[500px] bg-amber-400/60 rounded-full mix-blend-multiply filter blur-[150px] opacity-70 animate-blob animation-delay-4000"
+      ></div>
+      <div
+        class="absolute bottom-10 right-52 w-[500px] h-[500px] bg-cyan-300/60 rounded-full mix-blend-multiply filter blur-[150px] opacity-70 animate-blob animation-delay-4000"
+      ></div>
+
+      <!-- Auth Card -->
+      <div
+        class="relative bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl px-8 py-10 w-full max-w-md border border-white/40"
+        data-aos="zoom-in"
+      >
+        <!-- Tabs -->
+        <div class="flex justify-center mb-6">
+          <button
+            id="tab-login"
+            class="w-1/2 py-2 text-sm font-semibold border-b-2 border-indigo-500 text-indigo-600"
+          >
+            Sign In
+          </button>
+          <button
+            id="tab-signup"
+            class="w-1/2 py-2 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-indigo-600 hover:border-indigo-400"
+          >
+            Sign Up
+          </button>
         </div>
-    </div>
-    <div id="confetti-container" class="confetti-container"></div>
-    <div id="app" class="container mx-auto px-4 py-8 max-w-4xl">
-        <!-- Results Screen -->
-        <div id="results-screen" class="hidden bg-white rounded-xl shadow-lg p-10 max-w-xl mx-auto flex flex-col items-center justify-center">
-            <div class="absolute inset-0 z-0 bg-gradient-to-br from-pink-100 via-indigo-100 to-blue-100 animate-fade-in"></div>
-            <div id="results-celebration" class="w-full flex flex-col items-center mb-6"></div>
-            <div class="relative z-10 w-full flex flex-col items-center">
-                <div class="bg-gradient-to-br from-white via-indigo-50 to-pink-50 rounded-3xl shadow-2xl p-8 md:p-12 max-w-lg w-full flex flex-col items-center animate-fade-in-up">
-                    <div id="results-badge" class="mb-4 animate-bounce-slow"></div>
-                    <h2 class="text-4xl md:text-5xl font-extrabold text-indigo-700 mb-2 tracking-tight drop-shadow-lg">Quiz Results</h2>
-                    <div id="results-score" class="text-3xl md:text-4xl font-bold mb-4 text-pink-600 drop-shadow-sm"></div>
-                    <div id="results-achievements" class="mb-4 text-lg"></div>
-                    <button id="results-home" class="mt-4 bg-gradient-to-r from-pink-500 to-indigo-500 text-white px-8 py-3 rounded-xl font-bold text-lg shadow-lg hover:from-indigo-600 hover:to-pink-600 transition-all duration-200">Back to Home</button>
-                </div>
+
+        <!-- Heading -->
+        <h1
+          id="login-title"
+          class="text-2xl font-extrabold tracking-tight text-gray-900 text-center"
+        >
+          Welcome to <span class="text-indigo-600">QuizBit</span>
+        </h1>
+        <p class="mt-2 mb-6 text-gray-500 text-sm text-center">
+          Test your skills. Level up your knowledge.
+        </p>
+
+        <!-- Sign In Form -->
+        <form id="signin-form" class="space-y-5">
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              required
+              class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label
+              for="password"
+              class="block text-sm font-medium text-gray-700"
+              >Password</label
+            >
+            <div class="relative">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="••••••••"
+                required
+                class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 pr-10 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+              />
+              <button
+                type="button"
+                id="toggle-password"
+                class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600"
+              >
+                👁
+              </button>
             </div>
-        </div>
-        <!-- Home Screen: Language Selection -->
-        <div id="home-screen" class="bg-white rounded-xl shadow-lg p-8" data-aos="fade-up">
-            <div class="flex flex-col items-center mb-6">
-                <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">Welcome to QuizBit</h1>
-                <!-- Leaderboard button removed -->
-                <p class="text-gray-600 mb-8 text-center">Choose a programming language to test your skills!</p>
-            </div>
-            <div id="language-cards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8"></div>
-        <!-- Leaderboard Screen -->
-        <div id="leaderboard-screen" class="hidden bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-extrabold text-indigo-700">Leaderboard</h2>
-                <button id="back-to-home" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg font-medium hover:bg-indigo-200 transition">Back</button>
-            </div>
-            <div id="leaderboard-rows"></div>
-        </div>
-        </div>
-        <!-- Instructions Screen -->
-        <div id="instructions-screen" class="hidden bg-white rounded-xl shadow-lg p-8" data-aos="fade-up">
-            <div class="flex items-center gap-4 mb-6">
-                <div id="selected-lang-icon" class="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center"></div>
-                <div>
-                    <h2 id="selected-lang-name" class="text-2xl font-bold text-gray-800"></h2>
-                    <div id="selected-difficulty" class="text-indigo-600 font-medium"></div>
-                </div>
-            </div>
-            <div class="mb-8">
-                <h3 class="font-semibold text-gray-800 mb-2">Quiz Instructions</h3>
-                <ul class="list-disc list-inside text-gray-700 mb-4">
-                    <li>Answer all questions before the timer runs out.</li>
-                    <li>Each question has one correct answer.</li>
-                    <li>Difficulty affects question complexity and time limit.</li>
-                </ul>
-                <div class="flex items-center gap-2 text-gray-600 mb-6">
-                    <i data-feather="clock" class="w-4 h-4"></i>
-                    <span id="instructions-timer" class="text-sm">05:00</span>
-                </div>
-            </div>
-            <button id="continue-to-quiz" class="w-full bg-indigo-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2">
-                <i data-feather="play" class="w-6 h-6"></i>
-                Continue
+          </div>
+
+          <div class="flex items-center justify-between text-sm">
+            <label class="flex items-center space-x-2 text-gray-600">
+              <input type="checkbox" class="rounded border-gray-300" />
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="text-indigo-500 hover:underline"
+              >Forgot password?</a
+            >
+          </div>
+
+          <button
+            type="submit"
+            id="login-button"
+            class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold py-3 rounded-lg shadow-md hover:shadow-xl transition transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+          >
+            Sign In
+          </button>
+        </form>
+
+        <!-- Sign Up Form (hidden by default) -->
+        <form id="signup-form" class="space-y-5 hidden">
+          <div>
+            <label
+              for="new-name"
+              class="block text-sm font-medium text-gray-700"
+              >Full Name</label
+            >
+            <input
+              type="text"
+              id="new-name"
+              name="name"
+              placeholder="John Doe"
+              required
+              class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label
+              for="new-email"
+              class="block text-sm font-medium text-gray-700"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="new-email"
+              name="email"
+              placeholder="you@example.com"
+              required
+              class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label
+              for="new-password"
+              class="block text-sm font-medium text-gray-700"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="new-password"
+              name="password"
+              placeholder="Create a strong password"
+              required
+              minlength="6"
+              class="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+            />
+            <p class="mt-1 text-xs text-gray-400">
+              Must be at least 6 characters
+            </p>
+          </div>
+
+          <button
+            type="submit"
+            id="signup-button"
+            class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold py-3 rounded-lg shadow-md hover:shadow-xl transition transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+          >
+            Create Account
+          </button>
+        </form>
+
+        <!-- Social Logins -->
+        <div class="mt-6 space-y-3">
+          <p class="text-xs text-gray-400">Or continue with</p>
+          <div class="flex gap-3">
+            <button
+              class="flex-1 py-2 px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition text-sm font-medium text-gray-600"
+            >
+              <img
+                src="https://www.svgrepo.com/show/355037/google.svg"
+                alt="Google"
+                class="inline h-4 mr-2"
+              />
+              Google
             </button>
-        </div>
-        <!-- Quiz Screen -->
-        <div id="quiz-screen" class="hidden bg-white rounded-xl shadow-lg p-6 md:p-8">
-            <!-- Leaderboard removed -->
-            <div class="flex justify-between items-center mb-6">
-                <div class="flex items-center gap-2">
-                    <i data-feather="clock" class="w-5 h-5 text-gray-500"></i>
-                    <span id="timer" class="font-medium text-gray-700">05:00</span>
-                </div>
-                <div class="text-right">
-                    <span id="question-counter" class="font-medium text-gray-700">1/10</span>
-                </div>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-8">
-                <div id="progress-bar" class="progress-bar bg-indigo-600 h-2.5 rounded-full" style="width: 10%"></div>
-            </div>
-            <div id="question-container" class="mb-8"></div>
-            <div class="flex justify-between">
-                <button id="quit-quiz" class="text-gray-500 hover:text-gray-700 flex items-center gap-1">
-                    <i data-feather="x" class="w-4 h-4"></i>
-                    Quit
-                </button>
-                <button id="next-question" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    Next
-                    <i data-feather="arrow-right" class="w-4 h-4"></i>
-                </button>
-            </div>
-        
-            </div>
-            
-            
+            <button
+              class="flex-1 py-2 px-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition text-sm font-medium text-gray-600"
+            >
+              <img
+                src="https://www.svgrepo.com/show/349375/github.svg"
+                alt="GitHub"
+                class="inline h-4 mr-2"
+              />
+              GitHub
+            </button>
+          </div>
         </div>
 
-        <!-- Quiz Screen -->
-        <div id="quiz-screen" class="hidden bg-white rounded-xl shadow-lg p-6 md:p-8">
-            <div class="flex justify-between items-center mb-6">
-                <div class="flex items-center gap-2">
-                    <i data-feather="clock" class="w-5 h-5 text-gray-500"></i>
-                    <span id="timer" class="font-medium text-gray-700">05:00</span>
-                </div>
-                <div class="text-right">
-                    <span id="question-counter" class="font-medium text-gray-700">1/10</span>
-                </div>
-            </div>
-            
-            <div class="w-full bg-gray-200 rounded-full h-2.5 mb-8">
-                <div id="progress-bar" class="progress-bar bg-indigo-600 h-2.5 rounded-full" style="width: 10%"></div>
-            </div>
-            
-            <div id="question-container" class="mb-8">
-                <h2 id="question-text" class="text-xl font-semibold text-gray-800 mb-6">What does HTML stand for?</h2>
-                
-                <div id="options-container" class="space-y-3">
-                    <div class="option-card bg-gray-50 hover:bg-gray-100 rounded-lg p-4 cursor-pointer border border-gray-200">
-                        Hyper Text Markup Language
-                    </div>
-                    <div class="option-card bg-gray-50 hover:bg-gray-100 rounded-lg p-4 cursor-pointer border border-gray-200">
-                        Hyperlinks and Text Markup Language
-                    </div>
-                    <div class="option-card bg-gray-50 hover:bg-gray-100 rounded-lg p-4 cursor-pointer border border-gray-200">
-                        Home Tool Markup Language
-                    </div>
-                    <div class="option-card bg-gray-50 hover:bg-gray-100 rounded-lg p-4 cursor-pointer border border-gray-200">
-                        Hyper Transfer Markup Language
-                    </div>
-                </div>
-            </div>
-            
-            <div class="flex justify-between">
-                <button id="quit-quiz" class="text-gray-500 hover:text-gray-700 flex items-center gap-1">
-                    <i data-feather="x" class="w-4 h-4"></i>
-                    Quit
-                </button>
-                <button id="next-question" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    Next
-                    <i data-feather="arrow-right" class="w-4 h-4"></i>
-                </button>
-            </div>
+        <!-- Footer -->
+        <p class="mt-6 text-xs text-gray-400 text-center">
+          By continuing, you agree to the
+          <a href="#" class="underline hover:text-indigo-500">Terms</a> &
+          <a href="#" class="underline hover:text-indigo-500">Privacy Policy</a
+          >.
+        </p>
+      </div>
+    </section>
+
+    <!-- =========================
+     Category Screen
+========================== -->
+    <section
+      id="category-screen"
+      class="hidden flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 px-4"
+    >
+      <div
+        class="bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl p-8 w-full max-w-lg text-center"
+        data-aos="zoom-in"
+      >
+        <h2 class="text-3xl font-bold mb-8 text-gray-800">Choose a Category</h2>
+
+        <div class="grid gap-6">
+          <!-- HTML -->
+          <button
+            class="category-btn flex items-center justify-center gap-3 py-4 bg-gradient-to-r from-pink-500 to-red-500 text-white text-lg font-semibold rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition transform"
+            data-category="html"
+          >
+            <i data-feather="code" class="w-5 h-5"></i>
+            HTML
+          </button>
+
+          <!-- CSS -->
+          <button
+            class="category-btn flex items-center justify-center gap-3 py-4 bg-gradient-to-r from-green-400 to-emerald-500 text-white text-lg font-semibold rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition transform"
+            data-category="css"
+          >
+            <i data-feather="layers" class="w-5 h-5"></i>
+            CSS
+          </button>
+
+          <!-- JavaScript -->
+          <button
+            class="category-btn flex items-center justify-center gap-3 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-lg font-semibold rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition transform"
+            data-category="js"
+          >
+            <i data-feather="zap" class="w-5 h-5"></i>
+            JavaScript
+          </button>
         </div>
+      </div>
+    </section>
 
-        <!-- Results Screen -->
-        <div id="results-screen" class="hidden bg-white rounded-xl shadow-lg p-8 text-center" data-aos="zoom-in">
-            <div class="max-w-md mx-auto">
-                <div class="w-32 h-32 mx-auto mb-6 relative">
-                    <img id="earned-badge" src="http://static.photos/technology/200x200/3" alt="Earned Badge" class="w-full h-full rounded-full border-4 border-indigo-100">
-                    <div class="absolute -right-2 -top-2 bg-yellow-400 text-white rounded-full w-10 h-10 flex items-center justify-center">
-                        <i data-feather="award" class="w-5 h-5"></i>
-                    </div>
-                </div>
-                
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Congratulations!</h2>
-                <p class="text-gray-600 mb-6">You've earned the <span id="badge-name" class="font-semibold text-indigo-600">Proficient Coder</span> badge</p>
-                
-                <div class="bg-gray-50 rounded-lg p-4 mb-8">
-                    <div class="flex justify-between items-center mb-2">
-                            <script>
-// --- Results Celebration Logic ---
-const resultsScreen = document.getElementById('results-screen');
-const resultsScore = document.getElementById('results-score');
-const resultsBadge = document.getElementById('results-badge');
-const resultsAchievements = document.getElementById('results-achievements');
-const resultsCelebration = document.getElementById('results-celebration');
-const resultsHomeBtn = document.getElementById('results-home');
+    <!-- =========================
+         Quiz Screen
+    ========================== -->
+    <main
+      id="quiz-screen"
+      class="hidden flex flex-col items-center justify-center py-10"
+    >
+      <div
+        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-2xl"
+        data-aos="fade-up"
+      >
+        <h2 class="text-2xl font-bold mb-6 text-center">Quiz</h2>
+        <p id="timer" class="text-center text-red-500 font-semibold mb-4">
+          Time left: 15s
+        </p>
 
-function showResults(score, total) {
-    // Hide other screens
-    quizScreen.classList.add('hidden');
-    resultsScreen.classList.remove('hidden');
-    // Score display
-    resultsScore.textContent = `Score: ${score} / ${total}`;
-    // Badge logic
-    let badgeSVG = '', badgeTitle = '', badgeColor = '', achievements = [];
-    if (score >= 9) {
-        badgeSVG = `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#f472b6" stroke="#be185d" stroke-width="4"/><path d="M40 20 L50 60 L40 50 L30 60 Z" fill="#fff" stroke="#be185d" stroke-width="2"/><circle cx="40" cy="40" r="12" fill="#fff" stroke="#be185d" stroke-width="2"/></svg>`;
-        badgeTitle = 'Legend'; badgeColor = 'text-pink-600';
-        achievements.push('Flower Shower!');
-    } else if (score >= 8) {
-        badgeSVG = `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#f87171" stroke="#b91c1c" stroke-width="4"/><path d="M40 25 L45 55 L40 50 L35 55 Z" fill="#fff" stroke="#b91c1c" stroke-width="2"/><rect x="32" y="35" width="16" height="10" rx="5" fill="#fff" stroke="#b91c1c" stroke-width="2"/></svg>`;
-        badgeTitle = 'Core'; badgeColor = 'text-red-600';
-        achievements.push('Firecracker!');
-    } else if (score >= 7) {
-        badgeSVG = `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#fde68a" stroke="#b45309" stroke-width="4"/><polygon points="40,25 45,55 40,50 35,55" fill="#fff" stroke="#b45309" stroke-width="2"/><circle cx="40" cy="40" r="10" fill="#fff" stroke="#b45309" stroke-width="2"/></svg>`;
-        badgeTitle = 'Novice'; badgeColor = 'text-yellow-500';
-        achievements.push('Confetti!');
-    } else if (score >= 5) {
-        badgeSVG = `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#6ee7b7" stroke="#047857" stroke-width="4"/><rect x="30" y="30" width="20" height="20" rx="6" fill="#fff" stroke="#047857" stroke-width="2"/></svg>`;
-        badgeTitle = 'Beginner'; badgeColor = 'text-green-600';
-    } else {
-        badgeSVG = `<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" fill="#d1d5db" stroke="#374151" stroke-width="4"/><rect x="34" y="34" width="12" height="12" rx="3" fill="#fff" stroke="#374151" stroke-width="2"/></svg>`;
-        badgeTitle = 'Newbie'; badgeColor = 'text-gray-500';
-    }
-    resultsBadge.innerHTML = `<div class="flex flex-col items-center"><span class="block mb-2">${badgeSVG}</span><div class="font-bold text-xl mt-1 ${badgeColor}">${badgeTitle} Badge</div></div>`;
-    // Achievements
-    resultsAchievements.innerHTML = achievements.length ? `<div class="font-mono text-lg text-blue-500">${achievements.join(', ')}</div>` : '';
-    // Celebration effects: always fire confetti
-    resultsCelebration.innerHTML = '';
-    fireConfetti();
-}
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-200 rounded-full h-3 mb-6">
+          <div
+            id="progress-bar"
+            class="bg-indigo-500 h-3 rounded-full transition-all duration-500"
+            style="width: 0%"
+          ></div>
+        </div>
+        <p id="progress-text" class="text-sm text-gray-600 mb-6 text-center">
+          Question 1 of 10
+        </p>
 
-resultsHomeBtn.onclick = () => {
-    resultsScreen.classList.add('hidden');
-    homeScreen.classList.remove('hidden');
-};
+        <div id="question-container" class="mb-6 text-lg font-medium"></div>
+        <div id="options-container" class="grid grid-cols-1 gap-4"></div>
 
-// --- Celebration Effects ---
-function fireConfetti() {
-    if (window.confetti) {
-        confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
-    }
-}
-function fireFirecrackers() {
-    // Simulate firecrackers with multiple confetti bursts
-    if (window.confetti) {
-        for (let i = 0; i < 5; i++) {
-            setTimeout(() => confetti({ particleCount: 50, spread: 120, startVelocity: 60, origin: { x: Math.random(), y: Math.random() * 0.5 } }), i * 300);
-        }
-    }
-}
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between mt-6">
+          <button
+            id="prev-button"
+            disabled
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition"
+          >
+            Previous
+          </button>
+          <button
+            id="next-button"
+            class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg transition"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </main>
 
+    <!-- =========================
+         Result Screen
+    ========================== -->
+    <section
+      id="result-screen"
+      class="hidden flex flex-col items-center justify-center py-10"
+    >
+      <div
+        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-lg text-center"
+        data-aos="fade-in"
+      >
+        <h2 class="text-3xl font-bold mb-6">Your Results</h2>
+        <p id="score-text" class="text-xl mb-6"></p>
+        <button
+          id="restart-button"
+          class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg transition"
+        >
+          Restart Quiz
+        </button>
+      </div>
+    </section>
 
-// --- Navigation for Leaderboard ---
-// (Old leaderboard navigation removed)
-                    // --- QuizBit Multi-Language Quiz App ---
-                    AOS.init();
-                    feather.replace();
-
-                    // --- Login Logic ---
-                    const loginScreen = document.getElementById('login-screen');
-                    // const homeScreen = document.getElementById('home-screen'); // Already declared elsewhere
-                    let loginRole = null;
-                    let loginName = '';
-                    document.getElementById('student-login').onclick = function() {
-                        loginRole = 'student';
-                        document.getElementById('student-login').classList.add('ring-4', 'ring-indigo-300');
-                        document.getElementById('staff-login').classList.remove('ring-4', 'ring-indigo-300');
-                    };
-                    document.getElementById('staff-login').onclick = function() {
-                        loginRole = 'staff';
-                        document.getElementById('staff-login').classList.add('ring-4', 'ring-amber-300');
-                        document.getElementById('student-login').classList.remove('ring-4', 'ring-indigo-300');
-                    };
-                    document.getElementById('login-continue').onclick = function() {
-                        loginName = document.getElementById('login-name').value.trim();
-                        if (!loginRole) {
-                            alert('Please select Student or Staff login.');
-                            return;
-                        }
-                        if (!loginName) {
-                            alert('Please enter your name.');
-                            return;
-                        }
-                        loginScreen.style.display = 'none';
-                        homeScreen.classList.remove('hidden');
-                        // Optionally, store loginName and loginRole for later use
-                    };
-
-                    // Language data
-                    const languages = [
-                        {
-                            name: 'Python',
-                            icon: '<i data-feather="code"></i>',
-                            tagline: 'Test your Python skills',
-                            color: 'bg-yellow-100',
-                            questions: [
-                                // Easy
-                                { q: 'What is the output of print(2 ** 3)?', opts: ['6', '8', '9', '5'], a: 1 },
-                                { q: 'Which keyword is used for function in Python?', opts: ['func', 'def', 'function', 'lambda'], a: 1 },
-                                { q: 'What is a correct file extension for Python files?', opts: ['.py', '.pt', '.pyt', '.python'], a: 0 },
-                                { q: 'How do you insert COMMENTS in Python code?', opts: ['//', '#', '<!-- -->', '/* */'], a: 1 },
-                                { q: 'Which data type is immutable?', opts: ['list', 'dict', 'set', 'tuple'], a: 3 },
-                                // Hard
-                                { q: 'What is the output of print("5" * 2)?', opts: ['10', '55', 'TypeError', 'Error'], a: 1 },
-                                { q: 'Which of these is a Python tuple?', opts: ['[1,2,3]', '{1,2,3}', '(1,2,3)', '<1,2,3>'], a: 2 },
-                                { q: 'What does the zip() function do?', opts: ['Compresses files', 'Combines iterables', 'Sorts lists', 'None'], a: 1 },
-                                { q: 'What is the result of bool([])?', opts: ['True', 'False', 'Error', 'None'], a: 1 },
-                                { q: 'Which method removes whitespace from both ends of a string?', opts: ['strip()', 'trim()', 'remove()', 'clean()'], a: 0 }
-                            ]
-                        },
-                        {
-                            name: 'JavaScript',
-                            icon: '<i data-feather="zap"></i>',
-                            tagline: 'Test your JavaScript skills',
-                            color: 'bg-yellow-50',
-                            questions: [
-                                // Easy
-                                { q: 'Which symbol is used for single-line comments?', opts: ['//', '<!-- -->', '/* */', '#'], a: 0 },
-                                { q: 'What does DOM stand for?', opts: ['Document Object Model', 'Data Object Model', 'Desktop Oriented Model', 'Document Oriented Model'], a: 0 },
-                                { q: 'Which method adds an item to end of array?', opts: ['push()', 'pop()', 'shift()', 'unshift()'], a: 0 },
-                                { q: 'How do you declare a variable?', opts: ['var x;', 'variable x;', 'v x;', 'let x;'], a: 0 },
-                                { q: 'What is typeof NaN?', opts: ['number', 'string', 'undefined', 'object'], a: 0 },
-                                // Hard
-                                { q: 'What does the Array.prototype.map() method do?', opts: ['Filters array', 'Transforms array', 'Sorts array', 'Joins array'], a: 1 },
-                                { q: 'Which of these is a valid arrow function?', opts: ['function() => {}', '() => {}', '=> {}', 'function => {}'], a: 1 },
-                                { q: 'What is the output of [1,2,3].find(x => x > 1)?', opts: ['1', '2', '3', 'undefined'], a: 1 },
-                                { q: 'What is the result of typeof null?', opts: ['object', 'null', 'undefined', 'number'], a: 0 },
-                                { q: 'Which method merges two arrays?', opts: ['concat()', 'merge()', 'append()', 'join()'], a: 0 }
-                            ]
-                        },
-                        {
-                            name: 'Java',
-                            icon: '<i data-feather="coffee"></i>',
-                            tagline: 'Test your Java skills',
-                            color: 'bg-orange-50',
-                            questions: [
-                                // Easy
-                                { q: 'Which keyword is used to inherit a class?', opts: ['this', 'super', 'extends', 'implements'], a: 2 },
-                                { q: 'What is the entry point of Java program?', opts: ['start()', 'main()', 'run()', 'init()'], a: 1 },
-                                { q: 'Which is not a Java primitive type?', opts: ['int', 'float', 'String', 'char'], a: 2 },
-                                { q: 'Which company developed Java?', opts: ['Microsoft', 'Apple', 'Sun Microsystems', 'Google'], a: 2 },
-                                { q: 'What is the file extension for Java?', opts: ['.jav', '.java', '.jv', '.class'], a: 1 },
-                                // Hard
-                                { q: 'Which of these is not a Java access modifier?', opts: ['public', 'private', 'protected', 'package'], a: 3 },
-                                { q: 'What is the size of int in Java?', opts: ['2 bytes', '4 bytes', '8 bytes', 'Depends on system'], a: 1 },
-                                { q: 'Which method is used to start a thread?', opts: ['run()', 'start()', 'execute()', 'init()'], a: 1 },
-                                { q: 'What is the superclass of all classes in Java?', opts: ['Object', 'Class', 'Main', 'Base'], a: 0 },
-                                { q: 'Which keyword is used for exception handling?', opts: ['try', 'catch', 'throw', 'All of these'], a: 3 }
-                            ]
-                        },
-                        {
-                            name: 'C++',
-                            icon: '<i data-feather="cpu"></i>',
-                            tagline: 'Test your C++ skills',
-                            color: 'bg-blue-50',
-                            questions: [
-                                // Easy
-                                { q: 'Which symbol is used for single-line comments?', opts: ['//', '#', '/* */', '--'], a: 0 },
-                                { q: 'Who created C++?', opts: ['Dennis Ritchie', 'Bjarne Stroustrup', 'James Gosling', 'Guido van Rossum'], a: 1 },
-                                { q: 'What is the extension for C++ files?', opts: ['.cpp', '.c', '.cc', '.cp'], a: 0 },
-                                { q: 'Which is not a C++ data type?', opts: ['int', 'float', 'real', 'char'], a: 2 },
-                                { q: 'Which operator is used for input?', opts: ['>>', '<<', '==', '!='], a: 0 },
-                                // Hard
-                                { q: 'What is the output of sizeof(char)?', opts: ['1', '2', '4', '8'], a: 0 },
-                                { q: 'Which of these is not a loop in C++?', opts: ['for', 'while', 'repeat', 'do-while'], a: 2 },
-                                { q: 'Which header is needed for cout?', opts: ['<iostream>', '<stdio.h>', '<conio.h>', '<stdlib.h>'], a: 0 },
-                                { q: 'What is the result of 5/2 in C++?', opts: ['2', '2.5', '2.0', 'Error'], a: 0 },
-                                { q: 'Which keyword is used for dynamic memory?', opts: ['malloc', 'alloc', 'new', 'create'], a: 2 }
-                            ]
-                        },
-                        {
-                            name: 'Go',
-                            icon: '<i data-feather="activity"></i>',
-                            tagline: 'Test your Go skills',
-                            color: 'bg-green-50',
-                            questions: [
-                                // Easy
-                                { q: 'What is the keyword for defining a function?', opts: ['func', 'function', 'def', 'fn'], a: 0 },
-                                { q: 'What is the file extension for Go?', opts: ['.go', '.golang', '.g', '.gol'], a: 0 },
-                                { q: 'Who developed Go?', opts: ['Google', 'Microsoft', 'Apple', 'IBM'], a: 0 },
-                                { q: 'Which is not a Go data type?', opts: ['int', 'float32', 'real', 'string'], a: 2 },
-                                { q: 'How do you declare a variable?', opts: ['var x int', 'x := 5', 'let x = 5', 'int x'], a: 1 },
-                                // Hard
-                                { q: 'What is the output of len("GoLang")?', opts: ['5', '6', '7', 'Error'], a: 1 },
-                                { q: 'Which of these is not a Go keyword?', opts: ['defer', 'package', 'include', 'func'], a: 2 },
-                                { q: 'What is the zero value of int in Go?', opts: ['0', 'nil', 'undefined', 'None'], a: 0 },
-                                { q: 'Which function prints to console?', opts: ['print()', 'fmt.Println()', 'echo()', 'console.log()'], a: 1 },
-                                { q: 'Which symbol is used for short variable declaration?', opts: [':=', '=', '->', '::'], a: 0 }
-                            ]
-                        }
-                    ];
-
-                    const difficulties = [
-                        { label: 'Easy', value: 'easy', time: 300 },
-                        { label: 'Medium', value: 'medium', time: 180 },
-                        { label: 'Hard', value: 'hard', time: 90 }
-                    ];
-
-                    let selectedLang = null;
-                    let selectedDiff = difficulties[0];
-                    let quizQuestions = [];
-                    let currentQuestion = 0;
-                    let score = 0;
-                    let selectedOption = null;
-                    let timeLeft = 300;
-                    let timerInterval = null;
-
-                    const homeScreen = document.getElementById('home-screen');
-                    const instructionsScreen = document.getElementById('instructions-screen');
-                    const quizScreen = document.getElementById('quiz-screen');
-                    const languageCards = document.getElementById('language-cards');
-                    const selectedLangIcon = document.getElementById('selected-lang-icon');
-                    const selectedLangName = document.getElementById('selected-lang-name');
-                    const selectedDifficulty = document.getElementById('selected-difficulty');
-                    const instructionsTimer = document.getElementById('instructions-timer');
-                    const continueToQuizBtn = document.getElementById('continue-to-quiz');
-                    const questionContainer = document.getElementById('question-container');
-                    const timerElement = document.getElementById('timer');
-                    const questionCounter = document.getElementById('question-counter');
-                    const progressBar = document.getElementById('progress-bar');
-                    const nextQuestionBtn = document.getElementById('next-question');
-                    const quitQuizBtn = document.getElementById('quit-quiz');
-
-                    function showScreen(screen) {
-                        homeScreen.classList.add('hidden');
-                        instructionsScreen.classList.add('hidden');
-                        quizScreen.classList.add('hidden');
-                        screen.classList.remove('hidden');
-                        // Leaderboard rendering removed
-                        AOS.refresh();
-                        feather.replace();
-                    }
-
-                    function renderLanguageCards() {
-                        languageCards.innerHTML = '';
-                        languages.forEach((lang, idx) => {
-                            const card = document.createElement('div');
-                            card.className = `lang-card rounded-xl shadow-md p-6 flex flex-col items-center ${lang.color} cursor-pointer hover:shadow-xl`;
-                            card.innerHTML = `
-                                <div class="text-4xl mb-2">${lang.icon}</div>
-                                <div class="font-bold text-lg mb-1">${lang.name}</div>
-                                <div class="text-gray-600 text-sm mb-3">${lang.tagline}</div>
-                                <select class="difficulty-select mb-3 px-2 py-1 rounded border border-gray-300">
-                                    ${difficulties.map(d => `<option value="${d.value}">${d.label}</option>`).join('')}
-                                </select>
-                                <button class="start-btn bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-indigo-700 transition">Start</button>
-                            `;
-                            card.querySelector('.start-btn').onclick = () => {
-                                selectedLang = lang;
-                                const diffVal = card.querySelector('.difficulty-select').value;
-                                selectedDiff = difficulties.find(d => d.value === diffVal) || difficulties[0];
-                                quizQuestions = lang.questions;
-                                showInstructions();
-                            };
-                            languageCards.appendChild(card);
-                        });
-                        feather.replace();
-                    }
-
-                    function showInstructions() {
-                        selectedLangIcon.innerHTML = selectedLang.icon;
-                        selectedLangName.textContent = selectedLang.name;
-                        selectedDifficulty.textContent = selectedDiff.label;
-                        instructionsTimer.textContent = formatTime(selectedDiff.time);
-                        showScreen(instructionsScreen);
-                    }
-
-                    continueToQuizBtn.onclick = () => {
-                        timeLeft = selectedDiff.time;
-                        currentQuestion = 0;
-                        score = 0;
-                        showScreen(quizScreen);
-                        loadQuestion();
-                        startTimer();
-                    };
-
-                    function loadQuestion() {
-                        const q = quizQuestions[currentQuestion];
-                        questionContainer.innerHTML = `<h2 class="text-xl font-semibold text-gray-800 mb-6">${q.q}</h2>`;
-                        const optsDiv = document.createElement('div');
-                        optsDiv.className = 'space-y-3';
-                        q.opts.forEach((opt, idx) => {
-                            const optDiv = document.createElement('div');
-                            optDiv.className = 'option-card bg-gray-50 hover:bg-gray-100 rounded-lg p-4 cursor-pointer border border-gray-200';
-                            optDiv.textContent = opt;
-                            optDiv.onclick = () => selectOption(idx, optDiv);
-                            optsDiv.appendChild(optDiv);
-                        });
-                        questionContainer.appendChild(optsDiv);
-                        questionCounter.textContent = `${currentQuestion + 1}/${quizQuestions.length}`;
-                        progressBar.style.width = `${((currentQuestion + 1) / quizQuestions.length) * 100}%`;
-                        nextQuestionBtn.disabled = true;
-                        // Change quiz page background to red after 5th question
-                      
-                    }
-
-                    function selectOption(idx, el) {
-                        if (selectedOption !== null) return;
-                        selectedOption = idx;
-                        const correctIdx = quizQuestions[currentQuestion].a;
-                        const options = questionContainer.querySelectorAll('.option-card');
-                        options.forEach((option, i) => {
-                            option.style.pointerEvents = 'none';
-                            option.classList.remove('wobble', 'shake', 'correct-answer', 'wrong-answer');
-                            void option.offsetWidth;
-                            if (i === selectedOption) {
-                                if (i === correctIdx) {
-                                    option.classList.add('correct-answer', 'wobble');
-                                } else {
-                                    option.classList.add('wrong-answer', 'shake');
-                                }
-                            } else if (i === correctIdx) {
-                                option.classList.add('correct-answer');
-                            }
-                            option.addEventListener('animationend', function handler() {
-                                option.classList.remove('wobble', 'shake');
-                                option.removeEventListener('animationend', handler);
-                            });
-                        });
-                        if (selectedOption === correctIdx) score++;
-                        nextQuestionBtn.disabled = false;
-                    }
-
-                    nextQuestionBtn.onclick = () => {
-                        selectedOption = null;
-                        currentQuestion++;
-                        if (currentQuestion < quizQuestions.length) {
-                            loadQuestion();
-                        } else {
-                            finishQuiz();
-                        }
-                    };
-
-                    function startTimer() {
-                        updateTimerDisplay();
-                        clearInterval(timerInterval);
-                        timerInterval = setInterval(() => {
-                            timeLeft--;
-                            updateTimerDisplay();
-                            if (timeLeft <= 0) {
-                                clearInterval(timerInterval);
-                                finishQuiz();
-                            }
-                        }, 1000);
-                    }
-
-                    function updateTimerDisplay() {
-                        timerElement.textContent = formatTime(timeLeft);
-                    }
-
-                    function formatTime(sec) {
-                        const m = Math.floor(sec / 60);
-                        const s = sec % 60;
-                        return `${m}:${s < 10 ? '0' : ''}${s}`;
-                    }
-
-                    function finishQuiz() {
-                        clearInterval(timerInterval);
-                        showResults(score, quizQuestions.length);
-                    }
-
-                    quitQuizBtn.onclick = () => {
-                        clearInterval(timerInterval);
-                        if (confirm('Are you sure you want to quit? Your progress will be lost.')) {
-                            showScreen(homeScreen);
-                            renderLanguageCards();
-                        }
-                    };
-
-                    // Initial render
-                    renderLanguageCards();
-                    // Only show home screen after login
-                    homeScreen.classList.add('hidden');
-                    loginScreen.style.display = '';
-                            </script>
-    </script>
-</body>
+    <!-- Script -->
+    <script src="script.js"></script>
+  </body>
 </html>
