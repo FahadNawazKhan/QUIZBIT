@@ -1,4 +1,3 @@
-/* script.js — improved & robust version (paste over your current file) */
 
 AOS.init();
 feather.replace();
