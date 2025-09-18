@@ -1,3 +1,5 @@
+/* script.js — improved & robust version (paste over your current file) */
+
 AOS.init();
 feather.replace();
 
@@ -7,9 +9,19 @@ const categoryScreen = document.getElementById("category-screen");
 const quizScreen = document.getElementById("quiz-screen");
 const resultScreen = document.getElementById("result-screen");
 
-// Elements
-const loginForm = document.getElementById("login-form");
-const usernameInput = document.getElementById("username");
+// Elements (IDs matched to your HTML)
+const loginForm = document.getElementById("signin-form"); // was login-form
+const signupForm = document.getElementById("signup-form");
+const tabLogin = document.getElementById("tab-login");
+const tabSignup = document.getElementById("tab-signup");
+
+const usernameInput = document.getElementById("email"); // sign-in email
+const newNameInput = document.getElementById("new-name"); // sign-up name
+const newEmailInput = document.getElementById("new-email");
+
+const passwordInput = document.getElementById("password");
+const togglePasswordBtn = document.getElementById("toggle-password");
+
 const questionContainer = document.getElementById("question-container");
 const optionsContainer = document.getElementById("options-container");
 const prevButton = document.getElementById("prev-button");
@@ -28,7 +40,9 @@ let timeLeft = 15; // seconds per question
 let selectedCategory = "";
 let questions = [];
 let username = "";
-// Question bank
+let selectedAnswers = []; // tracks user's answer index per question (null = unanswered)
+
+// Question bank (unchanged)
 const questionBank = {
   html: [
     {
@@ -228,36 +242,83 @@ const questionBank = {
   ]
 };
 
-// Utility to switch screens
-function showScreen(hideScreens, showScreen) {
+// Utility to switch screens (rename parameter to avoid shadowing)
+function showScreen(hideScreens, screenToShow) {
   hideScreens.forEach((s) => s.classList.add("hidden"));
-  showScreen.classList.remove("hidden");
+  if (screenToShow) screenToShow.classList.remove("hidden");
 }
 
-// Handle login
-loginForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  username = usernameInput.value.trim();
-  if (!username) return;
+/* -------------------------
+   UI wiring & event hooks
+   ------------------------- */
 
-  showScreen([loginScreen], categoryScreen);
-});
+// Tabs: toggle sign in / sign up forms
+if (tabLogin && tabSignup && loginForm && signupForm) {
+  tabLogin.addEventListener("click", () => {
+    loginForm.classList.remove("hidden");
+    signupForm.classList.add("hidden");
+    tabLogin.classList.add("text-indigo-600", "border-indigo-500");
+    tabSignup.classList.remove("text-indigo-600", "border-indigo-500");
+  });
+  tabSignup.addEventListener("click", () => {
+    signupForm.classList.remove("hidden");
+    loginForm.classList.add("hidden");
+    tabSignup.classList.add("text-indigo-600", "border-indigo-500");
+    tabLogin.classList.remove("text-indigo-600", "border-indigo-500");
+  });
+}
+
+// Password toggle
+if (togglePasswordBtn && passwordInput) {
+  togglePasswordBtn.addEventListener("click", () => {
+    passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+  });
+}
+
+// Handle sign-in
+if (loginForm) {
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    username = usernameInput ? usernameInput.value.trim() : "";
+    if (!username) return;
+    showScreen([loginScreen], categoryScreen);
+  });
+}
+
+// Handle sign-up
+if (signupForm) {
+  signupForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = newNameInput ? newNameInput.value.trim() : "";
+    if (!name) return;
+    username = name;
+    // move to category screen
+    showScreen([loginScreen], categoryScreen);
+  });
+}
 
 // Handle category selection
-categoryButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    selectedCategory = btn.dataset.category;
-    questions = questionBank[selectedCategory];
-    currentQuestionIndex = 0;
-    score = 0;
+if (categoryButtons && categoryButtons.length) {
+  categoryButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      selectedCategory = btn.dataset.category;
+      questions = questionBank[selectedCategory] || [];
+      // initialize per-quiz answers tracker
+      selectedAnswers = new Array(questions.length).fill(null);
+      currentQuestionIndex = 0;
+      score = 0;
 
-    showScreen([categoryScreen], quizScreen);
-    loadQuestion();
+      showScreen([categoryScreen], quizScreen);
+      loadQuestion();
+    });
   });
-});
+}
 
-// Timer logic
+/* -------------------------
+   Timer logic
+   ------------------------- */
 function startTimer() {
+  if (!timerEl) return;
   clearInterval(timer);
   timeLeft = 15;
   timerEl.textContent = `Time left: ${timeLeft}s`;
@@ -279,45 +340,89 @@ function startTimer() {
   }, 1000);
 }
 
-// Load question
+/* -------------------------
+   Load / render question
+   ------------------------- */
 function loadQuestion() {
+  if (!questions || questions.length === 0) {
+    questionContainer.textContent = "No questions available — please pick another category.";
+    optionsContainer.innerHTML = "";
+    progressBar.style.width = `0%`;
+    progressText.textContent = `Question 0 of 0`;
+    return;
+  }
+
   const question = questions[currentQuestionIndex];
   questionContainer.textContent = question.question;
   optionsContainer.innerHTML = "";
 
   question.options.forEach((option, index) => {
     const button = document.createElement("button");
+    button.type = "button"; // explicit
     button.textContent = option;
     button.className =
       "bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg transition w-full text-left";
-    button.addEventListener("click", () => selectOption(index));
+    // If this question was already answered, show the selection and disable buttons
+    if (selectedAnswers[currentQuestionIndex] !== null) {
+      if (selectedAnswers[currentQuestionIndex] === index) {
+        button.classList.add("bg-indigo-200");
+      }
+      button.disabled = true;
+    }
+    button.addEventListener("click", (e) => selectOption(index, e));
     optionsContainer.appendChild(button);
   });
 
   // Progress update
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
   progressBar.style.width = `${progress}%`;
-  progressText.textContent = `Question ${
-    currentQuestionIndex + 1
-  } of ${questions.length}`;
+  progressText.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
 
   prevButton.disabled = currentQuestionIndex === 0;
-  nextButton.textContent =
-    currentQuestionIndex === questions.length - 1 ? "Finish" : "Next";
+  nextButton.textContent = currentQuestionIndex === questions.length - 1 ? "Finish" : "Next";
 
   startTimer();
 }
 
-// Handle option selection
-function selectOption(selectedIndex) {
+/* -------------------------
+   Handle option selection
+   - prevents double-scoring
+   - shows immediate correct / incorrect feedback
+   - disables options and advances after a short delay
+   ------------------------- */
+function selectOption(selectedIndex, event) {
   const question = questions[currentQuestionIndex];
+  // protect against edges
+  if (!question || selectedAnswers[currentQuestionIndex] !== null) return;
+
+  // mark answer
+  selectedAnswers[currentQuestionIndex] = selectedIndex;
+
+  // update score (only first time)
   if (selectedIndex === question.answer) {
     score++;
   }
-  goToNextQuestion();
+
+  // visual feedback: disable all buttons & color correct / wrong
+  const buttons = optionsContainer.querySelectorAll("button");
+  buttons.forEach((b, i) => {
+    b.disabled = true;
+    if (i === question.answer) {
+      b.classList.add("bg-green-200", "border", "border-green-400");
+    }
+    if (i === selectedIndex && selectedIndex !== question.answer) {
+      b.classList.add("bg-red-200", "border", "border-red-400");
+    }
+  });
+
+  clearInterval(timer);
+  // small delay so user sees feedback
+  setTimeout(goToNextQuestion, 900);
 }
 
-// Navigation
+/* -------------------------
+   Navigation
+   ------------------------- */
 function goToNextQuestion() {
   clearInterval(timer);
   if (currentQuestionIndex < questions.length - 1) {
@@ -337,25 +442,45 @@ prevButton.addEventListener("click", () => {
   }
 });
 
-// Show results
+/* -------------------------
+   Results + restart
+   ------------------------- */
 function showResults() {
   clearInterval(timer);
   showScreen([quizScreen], resultScreen);
-  scoreText.textContent = `${username}, you scored ${score} out of ${questions.length}!`;
+  const displayName = username || (usernameInput ? usernameInput.value : "Player");
+  scoreText.textContent = `${displayName}, you scored ${score} out of ${questions.length}!`;
 
   if (typeof confetti === "function") {
-    confetti();
+    confetti({
+      particleCount: 80,
+      spread: 60,
+      origin: { y: 0.6 }
+    });
   }
 }
 
-// Restart quiz
 restartButton.addEventListener("click", () => {
   clearInterval(timer);
+  // show the login (auth) card and reset state
   showScreen([resultScreen], loginScreen);
+
   currentQuestionIndex = 0;
   score = 0;
   selectedCategory = "";
   questions = [];
   username = "";
-  usernameInput.value = "";
+  selectedAnswers = [];
+
+  // clear form fields if present
+  if (usernameInput) usernameInput.value = "";
+  if (passwordInput) passwordInput.value = "";
+  if (newNameInput) newNameInput.value = "";
+  if (newEmailInput) newEmailInput.value = "";
+
+  // ensure sign-in tab visible
+  if (loginForm && signupForm) {
+    loginForm.classList.remove("hidden");
+    signupForm.classList.add("hidden");
+  }
 });
